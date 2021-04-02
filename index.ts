@@ -5,12 +5,18 @@ import { Client, Message } from 'discord.js'
 // file to process.env 
 config()
 
+// constants
 const token = process.env.TOKEN
 const prefix:Array<string> = ["=", "!", ";"]
 
 // the discord clinet
 const client = new Client()
 
+/**
+ * Checks whether the  message is a command
+ * @param {String} message The message content to check if a command
+ * @returns An object with type and command
+ */
 const isBotCommand = (message:string):any => {
     for(let index=0; index<prefix.length; index++){
         if(message.startsWith(prefix[index])){
