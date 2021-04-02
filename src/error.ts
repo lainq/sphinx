@@ -4,11 +4,23 @@ export class SphinxException {
   private readonly message: string;
   private messageChannel: Message;
 
+  /**
+   * @constructor
+   * 
+   * @param {String} messageData The content of the message
+   * @param {Message} message The message class
+   */
   constructor(readonly messageData: string, message: Message) {
     this.message = messageData;
     this.messageChannel = message;
   }
 
+  /**
+   * @public
+   * 
+   * Create a discord embed and send
+   * it as a message in the channel
+   */
   public evokeSphinxException = () => {
     const embed = new MessageEmbed()
       .setTitle('An unexpected error occured')

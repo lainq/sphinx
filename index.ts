@@ -34,6 +34,14 @@ const isBotCommand = (message: string): any => {
   return {type: null, command: false};
 };
 
+/**
+ * Send a slight_smile message, edit the message
+ * to a wink and then back to slight_smile after
+ * a specific timeout
+ * 
+ * @param {Message} message The message class that is sent when 
+ * the `sphinx` prefix is used in a message
+ */
 const sphinxMessage = (message:Message) => {
   message.channel.send(":slight_smile:").then((messageData) => {
     setTimeout(() => {
