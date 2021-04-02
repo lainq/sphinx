@@ -6,7 +6,7 @@ export class SphinxException {
 
   /**
    * @constructor
-   * 
+   *
    * @param {String} messageData The content of the message
    * @param {Message} message The message class
    */
@@ -17,7 +17,7 @@ export class SphinxException {
 
   /**
    * @public
-   * 
+   *
    * Create a discord embed and send
    * it as a message in the channel
    */
