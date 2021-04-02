@@ -3,6 +3,7 @@ import {Client, GuildMember, Message} from 'discord.js';
 import {Fcal, FcalError} from 'fcal';
 import {SphinxException} from './src/error';
 import { findChannelId } from './src/channel';
+import { SphinxCodeRunner } from './src/run/run';
 
 // Take all the variables from the env
 // file to process.env
@@ -73,7 +74,7 @@ client.on('message', async (message: Message) => {
     } else if (command.type == 'sphinx') {
       sphinxMessage(message)
     } else if(command.type == ";run"){
-      console.log(message.content)
+      const executor = new SphinxCodeRunner(message)
     }
   }
 });
