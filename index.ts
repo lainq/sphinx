@@ -1,7 +1,8 @@
 import {config} from 'dotenv';
-import {Client, Message} from 'discord.js';
+import {Client, GuildMember, Message} from 'discord.js';
 import {Fcal, FcalError} from 'fcal';
 import {SphinxException} from './src/error';
+import { findChannelId } from './src/channel';
 
 // Take all the variables from the env
 // file to process.env
@@ -9,10 +10,10 @@ config();
 
 // constants
 const token = process.env.TOKEN;
-const prefix: Array<string> = ['=', '!', ';', 'sphinx'];
+const prefix: Array<string> = ['=', '!', ';run', 'sphinx'];
 
 // the discord clinet
-const client = new Client();
+const client = new Client({ ws: { intents: ['GUILD_MESSAGES', 'GUILDS'] } });
 
 /**
  * Checks whether the  message is a commandor not
@@ -49,6 +50,10 @@ client.on('ready', () => {
 });
 
 client.on('message', async (message: Message) => {
+  if(message.author.bot){
+    return null
+  }
+
   const command: any = isBotCommand(message.content);
   if (command.command) {
     if (command.type == '=') {
@@ -67,10 +72,16 @@ client.on('message', async (message: Message) => {
       }
     } else if (command.type == 'sphinx') {
       sphinxMessage(message)
+    } else if(command.type == ";run"){
+      console.log(message.content)
     }
   }
 });
 
+client.on('guildMemberAdd', (member:GuildMember) => {
+  console.log(member)
+  member.send("Welcome!");
+});
 
 client.on('error', (e) => {
   console.error('Discord client error!', e);
