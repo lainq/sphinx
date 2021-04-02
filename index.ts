@@ -59,6 +59,8 @@ client.on('message', async (message: Message) => {
   }
 });
 
+client.on()
+
 client.on('error', (e) => {
   console.error('Discord client error!', e);
 });
