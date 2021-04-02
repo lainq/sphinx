@@ -32,6 +32,18 @@ const isBotCommand = (message: string): any => {
   return {type: null, command: false};
 };
 
+const sphinxMessage = (message:Message) => {
+  message.channel.send(":slight_smile:").then((messageData) => {
+    setTimeout(() => {
+      messageData.edit(":wink:").then((editMessage) => {
+        setTimeout(() => {
+          editMessage.edit(":slight_smile:")
+        }, 200)
+      })
+    }, 500)
+  })
+}
+
 client.on('ready', () => {
   console.log('The bot has started');
 });
@@ -54,12 +66,11 @@ client.on('message', async (message: Message) => {
         }
       }
     } else if (command.type == 'sphinx') {
-      message.channel.send('Hi');
+      sphinxMessage(message)
     }
   }
 });
 
-client.on()
 
 client.on('error', (e) => {
   console.error('Discord client error!', e);
