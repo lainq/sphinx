@@ -5,11 +5,28 @@ export class SphinxKickCommand {
     private message:Message;
     private mentionCount:any
 
+    /**
+     * @constructor
+     * 
+     * @param {Message} message The message class to reply
+     */
     constructor(message:Message) {
         this.message = message
         this.mentionCount = this.message.mentions.members?.size
     }
 
+    /**
+     * @public
+     * 
+     * Checks for mentions in the message, if the bot
+     * finds mentions and if the author has permissions 
+     * to kick members, loop throught each mention
+     * and try kicking the user
+     * 
+     * If error occurs, throw SphinxException(s)
+     * 
+     * @returns {void}
+     */
     public kickMember = () => {
         if(this.mentionCount > 0){
             const kickMembers = this.message.mentions.members
@@ -46,6 +63,15 @@ export class SphinxKickCommand {
         }
     }
 
+    /**
+     * @private
+     * 
+     * Sends a message and edit it to
+     * form a countdown animation while
+     * the members are being kicked
+     * 
+     * @returns {void}
+     */
     private messageAnimation = () => {
         this.message.channel.send("Kicking members")
         this.message.channel.send(":three:").then((message:Message) => {

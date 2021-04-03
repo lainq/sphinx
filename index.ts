@@ -38,11 +38,22 @@ const isBotCommand = (message: string): any => {
 };
 
 interface BadWords {
+  // the message that contains bad word
   word : string | null
+
+  // the bad word present in the message
   badWord : string | null
   contains : boolean
 }
 
+
+/**
+ * Checks if the message contains any bad 
+ * words, if yes return true, else false
+ * 
+ * @param {string} message The message
+ * @returns {BadWords}
+ */
 const hasBadWors = (message:string):BadWords => {
   const badWords:Array<string> = [
     "fuck", "dumbass", "ass", "sex"
@@ -118,6 +129,13 @@ client.on('message', async (message: Message) => {
       if(sphinxCommand[0] == "kick"){
         const kick = new SphinxKickCommand(message).kickMember()
       } else if(sphinxCommand[0] == "clear"){
+        // if the command is to clear messages
+        // get the argument and validate it
+        // to be a number
+
+        // if the argument is valid, try deleting message
+        // if an error occurs, throw a sphinxException
+
         const count = sphinxCommand[1]
         if(Number.isInteger(parseInt(count))){
           if(parseInt(count) > 100 || parseInt(count) < 1){
@@ -151,6 +169,8 @@ client.on('message', async (message: Message) => {
       }
     }
   } else if(bad.contains){
+    // Check if the message contains
+    // any bad words
     const warning = createDiscordEmbed({
       title : `Don't use bad words in the ${message.guild?.name} server`,
       author : {
@@ -168,6 +188,7 @@ client.on('message', async (message: Message) => {
     message.channel.send(warning)
     message.delete()
   } else if(message.content.includes("https://discord.gg") || message.content.includes("https://discord.com/invite")){
+    // prevents people from advertising servers
     message.author.send(createDiscordEmbed({
       title : `Don't advertise servers in ${message.guild?.name}`,
       author : {
