@@ -40,12 +40,11 @@ export class SphinxCodeRunner {
    */
   private createCodeSnippet = (): Snippet => {
     let code = this.code.slice(4, this.code.length);
-    const executeCodeSnippet = this.createSnippet()
+    const executeCodeSnippet = this.createSnippet();
     return {code: '', language: ''};
   };
 
   private createSnippet = () => {
-    let character = this.code[this.position.position]
-  }
-
+    let character = this.code[this.position.position];
+  };
 }

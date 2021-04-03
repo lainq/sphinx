@@ -1,14 +1,19 @@
 import {config, parse} from 'dotenv';
-import {Client, Guild, GuildEmojiManager, GuildMember, Message} from 'discord.js';
+import {
+  Client,
+  Guild,
+  GuildEmojiManager,
+  GuildMember,
+  Message,
+} from 'discord.js';
 import {Fcal, FcalError} from 'fcal';
 import {SphinxException} from './src/error';
 import {findChannelId} from './src/channel';
 import {SphinxCodeRunner} from './src/run/run';
 import {SphinxKickCommand} from './src/commands/kick';
 import {createDiscordEmbed} from './src/embed';
-import { SphinxGithubCommand } from './src/github';
-import { serverInformation, serverRoleInformation } from './src/commands/server';
-
+import {SphinxGithubCommand} from './src/github';
+import {serverInformation, serverRoleInformation} from './src/commands/server';
 
 // Take all the variables from the env
 // file to process.env
@@ -16,7 +21,7 @@ config();
 
 // constants
 const token = process.env.TOKEN;
-const prefix: Array<string> = ['=', '!', ';run', 'sphinx', 'github', "%"];
+const prefix: Array<string> = ['=', '!', ';run', 'sphinx', 'github', '%'];
 export const image = 'http://i.imgur.com/p2qNFag.png';
 
 // the discord clinet
@@ -42,31 +47,43 @@ const isBotCommand = (message: string): any => {
 
 /**
  * Take the last message sent in the server
- * before the current message and then react to 
+ * before the current message and then react to
  * the message with a random emoji
- * 
+ *
  * @param {Message} message The message class
  */
-export const reactToMessage = (message:Message) => {
+export const reactToMessage = (message: Message) => {
   let reactList = [
-    "😉", "😟", "🙂",
-    "😀", "😐", "😏", "😌",
-    "😵", "😕", "☹️", "☹️"
-  ]
-  const reactMessage = message.author.lastMessageID
-  if(reactMessage != null){
-    message.channel.messages.fetch({limit:2}).then((data:any) => {
-      const reactMessageObject = data.array()[1]
-      let reactEmoji = reactList[Math.floor(Math.random()*reactList.length)]
-      if(reactEmoji == undefined){
-        reactEmoji = reactList[0]
-      }
-      reactMessageObject.react(reactEmoji)
-    }).catch((error) => {
-      console.log(error)
-    })
+    '😉',
+    '😟',
+    '🙂',
+    '😀',
+    '😐',
+    '😏',
+    '😌',
+    '😵',
+    '😕',
+    '☹️',
+    '☹️',
+  ];
+  const reactMessage = message.author.lastMessageID;
+  if (reactMessage != null) {
+    message.channel.messages
+      .fetch({limit: 2})
+      .then((data: any) => {
+        const reactMessageObject = data.array()[1];
+        let reactEmoji =
+          reactList[Math.floor(Math.random() * reactList.length)];
+        if (reactEmoji == undefined) {
+          reactEmoji = reactList[0];
+        }
+        reactMessageObject.react(reactEmoji);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
-}
+};
 interface BadWords {
   // the message that contains bad word
   word: string | null;
@@ -203,32 +220,34 @@ client.on('message', async (message: Message) => {
             message
           ).evokeSphinxException();
         }
-      } else if(sphinxCommand[0] == "react"){
-        reactToMessage(message)
+      } else if (sphinxCommand[0] == 'react') {
+        reactToMessage(message);
       }
-    } else if(command.type == "github"){
-      const username = message.content.split(" ")[1]
-      if(username == undefined){
+    } else if (command.type == 'github') {
+      const username = message.content.split(' ')[1];
+      if (username == undefined) {
         const exception = new SphinxException(
-          "Invalid username",
+          'Invalid username',
           message
-        ).evokeSphinxException()
+        ).evokeSphinxException();
       } else {
-        const userData = new SphinxGithubCommand(username, message).fetchUserData()
-      } 
-    } else if(command.type == "%"){
-      const data = message.content.slice(1, message.content.length).split(" ")
-      if(data[0] == "server" || data[0] == "serverinfo"){
-        if(message.guild != null){
-          serverInformation(message.guild, message)
+        const userData = new SphinxGithubCommand(
+          username,
+          message
+        ).fetchUserData();
+      }
+    } else if (command.type == '%') {
+      const data = message.content.slice(1, message.content.length).split(' ');
+      if (data[0] == 'server' || data[0] == 'serverinfo') {
+        if (message.guild != null) {
+          serverInformation(message.guild, message);
         }
-      } else if(data[0] == "roles"){
-        if(message.guild != null){
-          serverRoleInformation(message.guild, message)
-        } 
-      } else if(data[0] == "profile"){
-        if(message.guild != null){
-
+      } else if (data[0] == 'roles') {
+        if (message.guild != null) {
+          serverRoleInformation(message.guild, message);
+        }
+      } else if (data[0] == 'profile') {
+        if (message.guild != null) {
         }
       }
     }
@@ -273,20 +292,22 @@ client.on('message', async (message: Message) => {
   }
 });
 
-client.on('guildCreate', (guild:Guild) => {
-  const channel = guild.systemChannel
-  channel?.send(createDiscordEmbed({
-    title: `Thank you for inviting me`,
-    author: {
-      name: 'Code Roller',
-      image: image,
-    },
-    color: '#7289DA',
-    description: `I am the Sphinx bot and thank you for inviting me`,
-    thumbnail: image,
-    url: '',
-  }))
-})
+client.on('guildCreate', (guild: Guild) => {
+  const channel = guild.systemChannel;
+  channel?.send(
+    createDiscordEmbed({
+      title: `Thank you for inviting me`,
+      author: {
+        name: 'Code Roller',
+        image: image,
+      },
+      color: '#7289DA',
+      description: `I am the Sphinx bot and thank you for inviting me`,
+      thumbnail: image,
+      url: '',
+    })
+  );
+});
 
 client.on('guildMemberAdd', (member: GuildMember) => {
   console.log(member);
