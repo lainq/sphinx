@@ -1,5 +1,5 @@
 import {config, parse} from 'dotenv';
-import {Client, GuildMember, Message} from 'discord.js';
+import {Client, GuildEmojiManager, GuildMember, Message} from 'discord.js';
 import {Fcal, FcalError} from 'fcal';
 import {SphinxException} from './src/error';
 import {findChannelId} from './src/channel';
@@ -39,7 +39,26 @@ const isBotCommand = (message: string): any => {
   return {type: null, command: false};
 };
 
-
+export const reactToMessage = (message:Message) => {
+  let reactList = [
+    "😉", "😟", "🙂",
+    "😀", "😐", "😏", "😌",
+    "😵", "😕", "☹️", "☹️"
+  ]
+  const reactMessage = message.author.lastMessageID
+  if(reactMessage != null){
+    message.channel.messages.fetch({limit:2}).then((data:any) => {
+      const reactMessageObject = data.array()[1]
+      let reactEmoji = reactList[Math.floor(Math.random()*reactList.length)]
+      if(reactEmoji == undefined){
+        reactEmoji = reactList[0]
+      }
+      reactMessageObject.react(reactEmoji)
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
+}
 interface BadWords {
   // the message that contains bad word
   word: string | null;
@@ -176,6 +195,8 @@ client.on('message', async (message: Message) => {
             message
           ).evokeSphinxException();
         }
+      } else if(sphinxCommand[0] == "react"){
+        reactToMessage(message)
       }
     } else if(command.type == "github"){
       const username = message.content.split(" ")[1]
