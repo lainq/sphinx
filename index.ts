@@ -120,19 +120,22 @@ client.on('message', async (message: Message) => {
       }
     }
   } else if(bad.contains){
-    message.reply(createDiscordEmbed({
-      title : "Don't use bad words in this server",
+    const warning = createDiscordEmbed({
+      title : `Don't use bad words in the ${message.guild?.name} server`,
       author : {
         name : "Code Roller",
         image : image
       },
       color : "#e20202",
       description : `
-      ${bad.badWord} found in ${bad.word}
+      ${bad.badWord} found in a message
       `,
       thumbnail : image,
       url : ""
-    }))
+    })
+    message.author.send(warning)
+    message.channel.send(warning)
+    message.delete()
   }
 });
 

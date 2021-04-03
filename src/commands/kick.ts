@@ -13,6 +13,7 @@ export class SphinxKickCommand {
     public kickMember = () => {
         if(this.mentionCount > 0){
             const kickMembers = this.message.mentions.members
+            this.messageAnimation()
             if(!this.message.member?.hasPermission("KICK_MEMBERS")){
                 const exception = new SphinxException(
                     "You don't have permissions to kick anyone",
@@ -23,7 +24,6 @@ export class SphinxKickCommand {
             kickMembers?.every((value:GuildMember) => {
                 try{
                     value.kick("Just for fun").then((member:GuildMember) => {
-                        this.message.channel.send(`Kicked ${member.displayName}`)
                     }).catch((error) => {
                         const exception = new SphinxException(
                             `I don't have permissions to kick ${value.displayName}`,
@@ -44,5 +44,24 @@ export class SphinxKickCommand {
                 this.message
             ).evokeSphinxException()
         }
+    }
+
+    private messageAnimation = () => {
+        this.message.channel.send("Kicking members")
+        this.message.channel.send(":three:").then((message:Message) => {
+            setTimeout(() => {
+                message.edit(":two:").then((messageData:Message) => {
+                    setTimeout(() => {
+                        messageData.edit(":one:").then((data:Message) => {
+                            data.edit(":zero:").then((message:Message) => {
+                                setTimeout(() => {
+                                    message.delete()
+                                }, 200)
+                            })
+                        })
+                    }, 200)
+                })
+            }, 200)
+        })
     }
 }
