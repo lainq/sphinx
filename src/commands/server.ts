@@ -1,4 +1,4 @@
-import { Channel, Guild, GuildMember, Message, MessageEmbed } from "discord.js";
+import { Channel, Guild, GuildMember, Message, MessageEmbed, Role } from "discord.js";
 import { image } from "../../index";
 
 export const serverInformation = (server:Guild, message:Message) => {
@@ -31,4 +31,41 @@ export const serverInformation = (server:Guild, message:Message) => {
       )
     console.log(server)
     message.channel.send(embed)
+}
+
+const getMemberCount = (message:Message, role:Role | undefined):number => {
+    if(role == undefined){
+        return 0;
+    }
+    const roleUserCount = message.guild?.members.cache.filter((member:GuildMember) => {
+        return Array.from(member.roles.cache.keys()).includes(role.id)
+    }).size
+    if(roleUserCount == undefined){
+        return 0
+    }
+    return roleUserCount;
+}
+
+export const serverRoleInformation = (server:Guild, message:Message) => {
+    const getSpaces = (length:number | undefined):string => {
+        if(length == undefined){
+            return ""
+        }
+
+        let spacedString = ""
+        for(let index=0; index<(21-length); index++){
+            spacedString += " "
+        }
+        return spacedString
+    }
+
+    const roles = server.roles.cache
+    let messageData:string = ``
+    const keys = Array.from(roles.keys())
+    for(let keyIndex=0; keyIndex<keys.length; keyIndex++){
+        const currentRole = roles.get(keys[keyIndex])
+        messageData += `${currentRole?.name}${getSpaces(currentRole?.name.toString().length)}\n`
+        console.log(getMemberCount(message, currentRole))
+    }
+    message.channel.send(messageData)
 }

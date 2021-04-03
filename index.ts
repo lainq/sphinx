@@ -7,7 +7,7 @@ import {SphinxCodeRunner} from './src/run/run';
 import {SphinxKickCommand} from './src/commands/kick';
 import {createDiscordEmbed} from './src/embed';
 import { SphinxGithubCommand } from './src/github';
-import { serverInformation } from './src/commands/server';
+import { serverInformation, serverRoleInformation } from './src/commands/server';
 
 
 // Take all the variables from the env
@@ -211,9 +211,13 @@ client.on('message', async (message: Message) => {
       } 
     } else if(command.type == "%"){
       const data = message.content.slice(1, message.content.length).split(" ")
-      if(data[0] == "server"){
+      if(data[0] == "server" || data[0] == "serverinfo"){
         if(message.guild != null){
           serverInformation(message.guild, message)
+        }
+      } else if(data[0] == "roles"){
+        if(message.guild != null){
+          serverRoleInformation(message.guild, message)
         }
       }
     }
