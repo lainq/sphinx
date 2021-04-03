@@ -1,4 +1,4 @@
-import { Guild, GuildMember, Message } from 'discord.js'
+import { GuildMember, Message } from 'discord.js'
 import { SphinxException } from '../error';
 
 export class SphinxKickCommand {
