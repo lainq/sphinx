@@ -7,6 +7,7 @@ import {SphinxCodeRunner} from './src/run/run';
 import {SphinxKickCommand} from './src/commands/kick';
 import {createDiscordEmbed} from './src/embed';
 import { SphinxGithubCommand } from './src/github';
+import { serverInformation } from './src/commands/server';
 
 
 // Take all the variables from the env
@@ -15,7 +16,7 @@ config();
 
 // constants
 const token = process.env.TOKEN;
-const prefix: Array<string> = ['=', '!', ';run', 'sphinx', 'github'];
+const prefix: Array<string> = ['=', '!', ';run', 'sphinx', 'github', "%"];
 export const image = 'http://i.imgur.com/p2qNFag.png';
 
 // the discord clinet
@@ -207,6 +208,13 @@ client.on('message', async (message: Message) => {
         ).evokeSphinxException()
       } else {
         const userData = new SphinxGithubCommand(username, message).fetchUserData()
+      } 
+    } else if(command.type == "%"){
+      const data = message.content.slice(1, message.content.length).split(" ")
+      if(data[0] == "server"){
+        if(message.guild != null){
+          serverInformation(message.guild, message)
+        }
       }
     }
   } else if (bad.contains) {
