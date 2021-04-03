@@ -4,6 +4,7 @@ import {Fcal, FcalError} from 'fcal';
 import {SphinxException} from './src/error';
 import {findChannelId} from './src/channel';
 import {SphinxCodeRunner} from './src/run/run';
+import { SphinxKickCommand } from './src/commands/kick';
 
 // Take all the variables from the env
 // file to process.env
@@ -83,6 +84,11 @@ client.on('message', async (message: Message) => {
       sphinxMessage(message);
     } else if (command.type == ';run') {
       const executor = new SphinxCodeRunner(message);
+    } else if(command.type == "!"){
+      const sphinxCommand = message.content.slice(1, message.content.length).split(" ")[0]
+      if(sphinxCommand == "kick"){
+        const kick = new SphinxKickCommand(message).kickMember()
+      }
     }
   }
 });
