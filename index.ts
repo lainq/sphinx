@@ -1,5 +1,5 @@
 import {config, parse} from 'dotenv';
-import {Client, GuildEmojiManager, GuildMember, Message} from 'discord.js';
+import {Client, Guild, GuildEmojiManager, GuildMember, Message} from 'discord.js';
 import {Fcal, FcalError} from 'fcal';
 import {SphinxException} from './src/error';
 import {findChannelId} from './src/channel';
@@ -249,6 +249,21 @@ client.on('message', async (message: Message) => {
     message.delete();
   }
 });
+
+client.on('guildCreate', (guild:Guild) => {
+  const channel = guild.systemChannel
+  channel?.send(createDiscordEmbed({
+    title: `Thank you for inviting me`,
+    author: {
+      name: 'Code Roller',
+      image: image,
+    },
+    color: '#7289DA',
+    description: `I am the Sphinx bot and thank you for inviting me`,
+    thumbnail: image,
+    url: '',
+  }))
+})
 
 client.on('guildMemberAdd', (member: GuildMember) => {
   console.log(member);
