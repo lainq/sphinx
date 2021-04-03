@@ -4,8 +4,8 @@ import {Fcal, FcalError} from 'fcal';
 import {SphinxException} from './src/error';
 import {findChannelId} from './src/channel';
 import {SphinxCodeRunner} from './src/run/run';
-import { SphinxKickCommand } from './src/commands/kick';
-import { createDiscordEmbed } from './src/embed';
+import {SphinxKickCommand} from './src/commands/kick';
+import {createDiscordEmbed} from './src/embed';
 
 // Take all the variables from the env
 // file to process.env
@@ -14,7 +14,7 @@ config();
 // constants
 const token = process.env.TOKEN;
 const prefix: Array<string> = ['=', '!', ';run', 'sphinx'];
-const image = "http://i.imgur.com/p2qNFag.png"
+const image = 'http://i.imgur.com/p2qNFag.png';
 
 // the discord clinet
 const client = new Client({ws: {intents: ['GUILD_MESSAGES', 'GUILDS']}});
@@ -39,40 +39,41 @@ const isBotCommand = (message: string): any => {
 
 interface BadWords {
   // the message that contains bad word
-  word : string | null
+  word: string | null;
 
   // the bad word present in the message
-  badWord : string | null
-  contains : boolean
+  badWord: string | null;
+  contains: boolean;
 }
 
-
 /**
- * Checks if the message contains any bad 
+ * Checks if the message contains any bad
  * words, if yes return true, else false
- * 
+ *
  * @param {string} message The message
  * @returns {BadWords}
  */
-const hasBadWors = (message:string):BadWords => {
-  const badWords:Array<string> = [
-    "fuck", "dumbass", "ass", "sex"
-  ]
-  const searchMessageArray = message.split(" ")
-  for(let searchIndex=0; searchIndex<searchMessageArray.length; searchIndex++){
-    const currentMessage = searchMessageArray[searchIndex]
-    for(let idx=0; idx<badWords.length; idx++){
-      if(currentMessage.includes(badWords[idx])){
+const hasBadWors = (message: string): BadWords => {
+  const badWords: Array<string> = ['fuck', 'dumbass', 'ass', 'sex'];
+  const searchMessageArray = message.split(' ');
+  for (
+    let searchIndex = 0;
+    searchIndex < searchMessageArray.length;
+    searchIndex++
+  ) {
+    const currentMessage = searchMessageArray[searchIndex];
+    for (let idx = 0; idx < badWords.length; idx++) {
+      if (currentMessage.includes(badWords[idx])) {
         return {
-          word : "`"+message+"`",
-          badWord : badWords[idx],
-          contains : true
-        }
+          word: '`' + message + '`',
+          badWord: badWords[idx],
+          contains: true,
+        };
       }
     }
   }
-  return {word:null, badWord:null, contains:false}
-}
+  return {word: null, badWord: null, contains: false};
+};
 
 /**
  * Send a slight_smile message, edit the message
@@ -104,7 +105,7 @@ client.on('message', async (message: Message) => {
   }
 
   const command: any = isBotCommand(message.content);
-  const bad = hasBadWors(message.content)
+  const bad = hasBadWors(message.content);
   if (command.command) {
     if (command.type == '=') {
       const calculations = message.content.slice(1, message.content.length);
@@ -124,11 +125,13 @@ client.on('message', async (message: Message) => {
       sphinxMessage(message);
     } else if (command.type == ';run') {
       const executor = new SphinxCodeRunner(message);
-    } else if(command.type == "!"){
-      const sphinxCommand = message.content.slice(1, message.content.length).split(" ")
-      if(sphinxCommand[0] == "kick"){
-        const kick = new SphinxKickCommand(message).kickMember()
-      } else if(sphinxCommand[0] == "clear"){
+    } else if (command.type == '!') {
+      const sphinxCommand = message.content
+        .slice(1, message.content.length)
+        .split(' ');
+      if (sphinxCommand[0] == 'kick') {
+        const kick = new SphinxKickCommand(message).kickMember();
+      } else if (sphinxCommand[0] == 'clear') {
         // if the command is to clear messages
         // get the argument and validate it
         // to be a number
@@ -136,71 +139,80 @@ client.on('message', async (message: Message) => {
         // if the argument is valid, try deleting message
         // if an error occurs, throw a sphinxException
 
-        const count = sphinxCommand[1]
-        if(Number.isInteger(parseInt(count))){
-          if(parseInt(count) > 100 || parseInt(count) < 1){
+        const count = sphinxCommand[1];
+        if (Number.isInteger(parseInt(count))) {
+          if (parseInt(count) > 100 || parseInt(count) < 1) {
             const error = new SphinxException(
-              "The message count should be between 1 and 100",
+              'The message count should be between 1 and 100',
               message
-            ).evokeSphinxException()
+            ).evokeSphinxException();
           } else {
-            await message.channel.messages.fetch({ limit: parseInt(count) }).then((data:any) => { // Fetches the messages
-              if(message.channel.type == "text"){
-                message.channel.bulkDelete(data)
-              } else {
+            await message.channel.messages
+              .fetch({limit: parseInt(count)})
+              .then((data: any) => {
+                // Fetches the messages
+                if (message.channel.type == 'text') {
+                  message.channel.bulkDelete(data);
+                } else {
+                  const error = new SphinxException(
+                    'An error occured while deleteing messages',
+                    message
+                  ).evokeSphinxException();
+                }
+              })
+              .catch((errorData) => {
                 const error = new SphinxException(
-                  "An error occured while deleteing messages",
+                  'An error occured while deleting message',
                   message
-                ).evokeSphinxException()
-              }
-            }).catch((errorData) => {
-              const error = new SphinxException(
-                "An error occured while deleting message",
-                message
-              ).evokeSphinxException()
-            })
+                ).evokeSphinxException();
+              });
           }
         } else {
           const error = new SphinxException(
-            "Not a valid argument for clear",
+            'Not a valid argument for clear',
             message
-          ).evokeSphinxException()
+          ).evokeSphinxException();
         }
       }
     }
-  } else if(bad.contains){
+  } else if (bad.contains) {
     // Check if the message contains
     // any bad words
     const warning = createDiscordEmbed({
-      title : `Don't use bad words in the ${message.guild?.name} server`,
-      author : {
-        name : "Code Roller",
-        image : image
+      title: `Don't use bad words in the ${message.guild?.name} server`,
+      author: {
+        name: 'Code Roller',
+        image: image,
       },
-      color : "#e20202",
-      description : `
+      color: '#e20202',
+      description: `
       ${bad.badWord} found in a message
       `,
-      thumbnail : image,
-      url : ""
-    })
-    message.author.send(warning)
-    message.channel.send(warning)
-    message.delete()
-  } else if(message.content.includes("https://discord.gg") || message.content.includes("https://discord.com/invite")){
+      thumbnail: image,
+      url: '',
+    });
+    message.author.send(warning);
+    message.channel.send(warning);
+    message.delete();
+  } else if (
+    message.content.includes('https://discord.gg') ||
+    message.content.includes('https://discord.com/invite')
+  ) {
     // prevents people from advertising servers
-    message.author.send(createDiscordEmbed({
-      title : `Don't advertise servers in ${message.guild?.name}`,
-      author : {
-        name : "Code Roller",
-        image : image
-      },
-      color : "#e20202",
-      description : `Advertising not allowed in ${message.guild?.name}`,
-      thumbnail : image,
-      url : ""
-    }))
-    message.delete()
+    message.author.send(
+      createDiscordEmbed({
+        title: `Don't advertise servers in ${message.guild?.name}`,
+        author: {
+          name: 'Code Roller',
+          image: image,
+        },
+        color: '#e20202',
+        description: `Advertising not allowed in ${message.guild?.name}`,
+        thumbnail: image,
+        url: '',
+      })
+    );
+    message.delete();
   }
 });
 
