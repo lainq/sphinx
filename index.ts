@@ -6,6 +6,8 @@ import {findChannelId} from './src/channel';
 import {SphinxCodeRunner} from './src/run/run';
 import {SphinxKickCommand} from './src/commands/kick';
 import {createDiscordEmbed} from './src/embed';
+import { SphinxGithubCommand } from './src/github';
+
 
 // Take all the variables from the env
 // file to process.env
@@ -13,8 +15,8 @@ config();
 
 // constants
 const token = process.env.TOKEN;
-const prefix: Array<string> = ['=', '!', ';run', 'sphinx'];
-const image = 'http://i.imgur.com/p2qNFag.png';
+const prefix: Array<string> = ['=', '!', ';run', 'sphinx', 'github'];
+export const image = 'http://i.imgur.com/p2qNFag.png';
 
 // the discord clinet
 const client = new Client({ws: {intents: ['GUILD_MESSAGES', 'GUILDS']}});
@@ -36,6 +38,7 @@ const isBotCommand = (message: string): any => {
   }
   return {type: null, command: false};
 };
+
 
 interface BadWords {
   // the message that contains bad word
@@ -173,6 +176,16 @@ client.on('message', async (message: Message) => {
             message
           ).evokeSphinxException();
         }
+      }
+    } else if(command.type == "github"){
+      const username = message.content.split(" ")[1]
+      if(username == undefined){
+        const exception = new SphinxException(
+          "Invalid username",
+          message
+        ).evokeSphinxException()
+      } else {
+        const userData = new SphinxGithubCommand(username, message).fetchUserData()
       }
     }
   } else if (bad.contains) {
