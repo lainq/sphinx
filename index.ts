@@ -40,6 +40,13 @@ const isBotCommand = (message: string): any => {
   return {type: null, command: false};
 };
 
+/**
+ * Take the last message sent in the server
+ * before the current message and then react to 
+ * the message with a random emoji
+ * 
+ * @param {Message} message The message class
+ */
 export const reactToMessage = (message:Message) => {
   let reactList = [
     "😉", "😟", "🙂",
@@ -221,7 +228,7 @@ client.on('message', async (message: Message) => {
         } 
       } else if(data[0] == "profile"){
         if(message.guild != null){
-          
+
         }
       }
     }

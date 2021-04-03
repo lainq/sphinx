@@ -1,12 +1,30 @@
 import { Channel, Guild, GuildMember, Message, MessageEmbed, Role } from "discord.js";
 import { image } from "../../index";
 
+/**
+ * Get all the channels in the server
+ * and filter it by specific channel type.then
+ * returns the size of the final array
+ * of channels
+ * 
+ * @param {Guild} serverData The guild 
+ * @param {string[]} types The type of channels to count
+ * @returns {number} The number of specified channel
+ */
+export const channelCount = (serverData:Guild, types:Array<string>):number => {
+    return serverData.channels.cache.filter((channel:Channel) => {
+        return types.includes(channel.type)
+    }).size
+}
+
+/**
+ * Gets information about the server
+ * and sends a message as an embed
+ * 
+ * @param {Guild} server The discord server
+ * @param {Message} message The message class
+ */
 export const serverInformation = (server:Guild, message:Message) => {
-    const channelCount = (serverData:Guild, types:Array<string>):number => {
-        return serverData.channels.cache.filter((channel:Channel) => {
-            return types.includes(channel.type)
-        }).size
-    }
     const embed = new MessageEmbed()
       .setAuthor(server.name, server.iconURL()?.toString())
       .addField(":id: Server ID", server.id, true)
@@ -29,10 +47,17 @@ export const serverInformation = (server:Guild, message:Message) => {
           `**Region**:${server.region.charAt(0).toUpperCase() + server.region.slice(1)}`,
           true
       )
-    console.log(server)
     message.channel.send(embed)
 }
 
+/**
+ * Gets the list of members and returns the
+ * number of members with a speicific role
+ * 
+ * @param {Message} message The message content
+ * @param {Role} role The role to check the member count
+ * @returns {number} The number of members with the specific role
+ */
 const getMemberCount = (message:Message, role:Role | undefined):number => {
     if(role == undefined){
         return 0;
@@ -46,6 +71,15 @@ const getMemberCount = (message:Message, role:Role | undefined):number => {
     return roleUserCount;
 }
 
+
+/**
+ * Get all the roles in the server as the number of
+ * members with the specific role and then send
+ * the message in the current channel
+ * 
+ * @param {Guild} server The discord server
+ * @param {Message} message The message class
+ */
 export const serverRoleInformation = (server:Guild, message:Message) => {
     const getSpaces = (length:number | undefined):string => {
         if(length == undefined){

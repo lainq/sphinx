@@ -12,11 +12,23 @@ export class SphinxGithubCommand {
         return `https://api.github.com/users/${username}`
     }
 
+    /**
+     * @constructor
+     * @param {string} username The github username to fetch data
+     * from the api
+     * @param {Message} message The message class 
+     */
     constructor(username:string, message:Message){
         this.message = message
         this.username = username
     }
 
+    /**
+     * Fetch information from the github api 
+     * and create an embed with the user information
+     * 
+     * Send the embed message in the message channel
+     */
     public fetchUserData = () => {
         axios.default.get(this.url(this.username)).then((value:any) => {
             const data = value.data
