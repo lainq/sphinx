@@ -218,6 +218,10 @@ client.on('message', async (message: Message) => {
       } else if(data[0] == "roles"){
         if(message.guild != null){
           serverRoleInformation(message.guild, message)
+        } 
+      } else if(data[0] == "profile"){
+        if(message.guild != null){
+          
         }
       }
     }
