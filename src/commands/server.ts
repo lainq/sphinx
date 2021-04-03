@@ -64,8 +64,10 @@ export const serverRoleInformation = (server:Guild, message:Message) => {
     const keys = Array.from(roles.keys())
     for(let keyIndex=0; keyIndex<keys.length; keyIndex++){
         const currentRole = roles.get(keys[keyIndex])
-        messageData += `${currentRole?.name}${getSpaces(currentRole?.name.toString().length)}\n`
-        console.log(getMemberCount(message, currentRole))
+        messageData += `${currentRole?.name}${getSpaces(currentRole?.name.toString().length)}${getMemberCount(
+            message, currentRole
+        )}\n`
     }
+    messageData = "```"+messageData+"```"
     message.channel.send(messageData)
 }
