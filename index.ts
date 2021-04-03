@@ -136,6 +136,19 @@ client.on('message', async (message: Message) => {
     message.author.send(warning)
     message.channel.send(warning)
     message.delete()
+  } else if(message.content.includes("https://discord.gg") || message.content.includes("https://discord.com/invite")){
+    message.author.send(createDiscordEmbed({
+      title : `Don't advertise servers in ${message.guild?.name}`,
+      author : {
+        name : "Code Roller",
+        image : image
+      },
+      color : "#e20202",
+      description : `Advertising not allowed in ${message.guild?.name}`,
+      thumbnail : image,
+      url : ""
+    }))
+    message.delete()
   }
 });
 
