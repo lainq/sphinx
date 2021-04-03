@@ -1,4 +1,4 @@
-import {config} from 'dotenv';
+import {config, parse} from 'dotenv';
 import {Client, GuildMember, Message} from 'discord.js';
 import {Fcal, FcalError} from 'fcal';
 import {SphinxException} from './src/error';
@@ -114,9 +114,40 @@ client.on('message', async (message: Message) => {
     } else if (command.type == ';run') {
       const executor = new SphinxCodeRunner(message);
     } else if(command.type == "!"){
-      const sphinxCommand = message.content.slice(1, message.content.length).split(" ")[0]
-      if(sphinxCommand == "kick"){
+      const sphinxCommand = message.content.slice(1, message.content.length).split(" ")
+      if(sphinxCommand[0] == "kick"){
         const kick = new SphinxKickCommand(message).kickMember()
+      } else if(sphinxCommand[0] == "clear"){
+        const count = sphinxCommand[1]
+        if(Number.isInteger(parseInt(count))){
+          if(parseInt(count) > 100 || parseInt(count) < 1){
+            const error = new SphinxException(
+              "The message count should be between 1 and 100",
+              message
+            ).evokeSphinxException()
+          } else {
+            await message.channel.messages.fetch({ limit: parseInt(count) }).then((data:any) => { // Fetches the messages
+              if(message.channel.type == "text"){
+                message.channel.bulkDelete(data)
+              } else {
+                const error = new SphinxException(
+                  "An error occured while deleteing messages",
+                  message
+                ).evokeSphinxException()
+              }
+            }).catch((errorData) => {
+              const error = new SphinxException(
+                "An error occured while deleting message",
+                message
+              ).evokeSphinxException()
+            })
+          }
+        } else {
+          const error = new SphinxException(
+            "Not a valid argument for clear",
+            message
+          ).evokeSphinxException()
+        }
       }
     }
   } else if(bad.contains){
