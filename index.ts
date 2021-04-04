@@ -293,16 +293,20 @@ client.on('message', async (message: Message) => {
         if (message.guild != null) {
           sphinxSimplePoll(message);
         }
-      } else if(sphinxCommand[0] == "poll"){
-        if(message.guild != null){
-          const poll = new SphinxPollCommand(message)
+      } else if (sphinxCommand[0] == 'poll') {
+        if (message.guild != null) {
+          const poll = new SphinxPollCommand(message);
         }
-      } else if(sphinxCommand[0] == "count"){
-        if(message.guild != null){
-          const data = message.channel.messages.cache.filter((messageData:Message) => {
-            return messageData.author == message.author
-          }).size
-          message.reply(`You have sent ${data} messages in this channel :slight_smile:`)
+      } else if (sphinxCommand[0] == 'count') {
+        if (message.guild != null) {
+          const data = message.channel.messages.cache.filter(
+            (messageData: Message) => {
+              return messageData.author == message.author;
+            }
+          ).size;
+          message.reply(
+            `You have sent ${data} messages in this channel :slight_smile:`
+          );
         }
       }
     } else if (command.type == 'github') {
