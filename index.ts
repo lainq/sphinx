@@ -16,6 +16,7 @@ import {SphinxGithubCommand} from './src/github';
 import {serverInformation, serverRoleInformation} from './src/commands/server';
 import { SphinxUserProfile } from './src/commands/profile';
 import { isDuplicateMessage } from './src/duplicate';
+import axios, { AxiosResponse } from 'axios';
 
 // Take all the variables from the env
 // file to process.env
@@ -46,6 +47,20 @@ const isBotCommand = (message: string): any => {
   }
   return {type: null, command: false};
 };
+
+const generateCatImages = (message:Message):void => {
+  axios.get("https://api.thecatapi.com/v1/images/search").then((data:AxiosResponse<any>) => {
+    const value:Array<any> = Array.from(data.data)
+    for(let imgIndex=0; imgIndex<value.length; imgIndex++){
+      message.channel.send(value[imgIndex].url)
+    }
+  }).catch((exception) => {
+    const error = new SphinxException(
+      "Failed to fetch cat images",
+      message
+    ).evokeSphinxException()
+  })
+}
 
 /**
  * Take the last message sent in the server
@@ -224,6 +239,8 @@ client.on('message', async (message: Message) => {
         }
       } else if (sphinxCommand[0] == 'react') {
         reactToMessage(message);
+      } else if(sphinxCommand[0] == "cat"){
+        generateCatImages(message)
       }
     } else if (command.type == 'github') {
       const username = message.content.split(' ')[1];
