@@ -14,10 +14,10 @@ import {SphinxKickCommand} from './src/commands/kick';
 import {createDiscordEmbed} from './src/embed';
 import {SphinxGithubCommand} from './src/github';
 import {serverInformation, serverRoleInformation} from './src/commands/server';
-import { SphinxUserProfile } from './src/commands/profile';
-import { isDuplicateMessage } from './src/duplicate';
-import axios, { AxiosResponse } from 'axios';
-import { sphinxSimplePoll } from './src/commands/poll';
+import {SphinxUserProfile} from './src/commands/profile';
+import {isDuplicateMessage} from './src/duplicate';
+import axios, {AxiosResponse} from 'axios';
+import {sphinxSimplePoll} from './src/commands/poll';
 
 // Take all the variables from the env
 // file to process.env
@@ -50,52 +50,63 @@ const isBotCommand = (message: string): any => {
 };
 
 /**
- * Fetch random cat images from the catapi 
+ * Fetch random cat images from the catapi
  * and send in the channel
- * 
+ *
  * @param message The message class
  */
-const generateCatImages = (message:Message):void => {
-  axios.get("https://api.thecatapi.com/v1/images/search").then((data:AxiosResponse<any>) => {
-    const value:Array<any> = Array.from(data.data)
-    for(let imgIndex=0; imgIndex<value.length; imgIndex++){
-      message.channel.send(value[imgIndex].url)
-    }
-  }).catch((exception) => {
-    const error = new SphinxException(
-      "Failed to fetch cat images",
-      message
-    ).evokeSphinxException()
-  })
-}
+const generateCatImages = (message: Message): void => {
+  axios
+    .get('https://api.thecatapi.com/v1/images/search')
+    .then((data: AxiosResponse<any>) => {
+      const value: Array<any> = Array.from(data.data);
+      for (let imgIndex = 0; imgIndex < value.length; imgIndex++) {
+        message.channel.send(value[imgIndex].url);
+      }
+    })
+    .catch((exception) => {
+      const error = new SphinxException(
+        'Failed to fetch cat images',
+        message
+      ).evokeSphinxException();
+    });
+};
 
 /**
  * Fetch some random activities using axios
- * and send them as embeds 
- * 
+ * and send them as embeds
+ *
  * @param message The message class
  */
-const generateActivities = (message:Message):void => {
-  axios.get("http://www.boredapi.com/api/activity/").then((data:AxiosResponse<any>) => {
-    const value = data.data
-    const embed = createDiscordEmbed({
-      title : `:busts_in_silhouette: ${value.activity}`,
-      author : {name : "Sphinx", image:image},
-      description : "",
-      color : "#7289DA",
-      url : value.link,
-      thumbnail : ""
-    }).addField(":small_blue_diamond: Type", value.type, true)
-      .addField(":man_construction_worker::woman_construction_worker: Participants", value.participants, true)
-      .addField(":moneybag: Price", value.price)
-    message.channel.send(embed)
-  }).catch((err) => {
-    const error = new SphinxException(
-      "Nothing for you right now",
-      message
-    ).evokeSphinxException()
-  })
-}
+const generateActivities = (message: Message): void => {
+  axios
+    .get('http://www.boredapi.com/api/activity/')
+    .then((data: AxiosResponse<any>) => {
+      const value = data.data;
+      const embed = createDiscordEmbed({
+        title: `:busts_in_silhouette: ${value.activity}`,
+        author: {name: 'Sphinx', image: image},
+        description: '',
+        color: '#7289DA',
+        url: value.link,
+        thumbnail: '',
+      })
+        .addField(':small_blue_diamond: Type', value.type, true)
+        .addField(
+          ':man_construction_worker::woman_construction_worker: Participants',
+          value.participants,
+          true
+        )
+        .addField(':moneybag: Price', value.price);
+      message.channel.send(embed);
+    })
+    .catch((err) => {
+      const error = new SphinxException(
+        'Nothing for you right now',
+        message
+      ).evokeSphinxException();
+    });
+};
 
 /**
  * Take the last message sent in the server
@@ -274,13 +285,13 @@ client.on('message', async (message: Message) => {
         }
       } else if (sphinxCommand[0] == 'react') {
         reactToMessage(message);
-      } else if(sphinxCommand[0] == "cat"){
-        generateCatImages(message)
-      } else if(sphinxCommand[0] == "bored"){
-        generateActivities(message)
-      } else if(sphinxCommand[0] == "poll"){
-        if(message.guild != null){
-          sphinxSimplePoll(message)
+      } else if (sphinxCommand[0] == 'cat') {
+        generateCatImages(message);
+      } else if (sphinxCommand[0] == 'bored') {
+        generateActivities(message);
+      } else if (sphinxCommand[0] == 'poll') {
+        if (message.guild != null) {
+          sphinxSimplePoll(message);
         }
       }
     } else if (command.type == 'github') {
@@ -308,7 +319,7 @@ client.on('message', async (message: Message) => {
         }
       } else if (data[0] == 'profile') {
         if (message.guild != null) {
-          const profile = new SphinxUserProfile(message)
+          const profile = new SphinxUserProfile(message);
         }
       }
     }
@@ -351,8 +362,8 @@ client.on('message', async (message: Message) => {
     );
     message.delete();
   } else {
-    if(isDuplicateMessage(message)){
-      console.log("Found duplicate message")
+    if (isDuplicateMessage(message)) {
+      console.log('Found duplicate message');
     }
   }
 });

@@ -1,10 +1,9 @@
-import {GuildMember, Message, MessageAttachment } from 'discord.js';
-import { svg2png } from 'svg-png-converter'
-
+import {GuildMember, Message, MessageAttachment} from 'discord.js';
+import {svg2png} from 'svg-png-converter';
 
 export class SphinxUserProfile {
   private message: Message;
-  private author:any;
+  private author: any;
   /**
    * @constructor
    *
@@ -12,23 +11,25 @@ export class SphinxUserProfile {
    */
   constructor(message: Message) {
     this.message = message;
-    this.author = this.message.author
+    this.author = this.message.author;
 
-    this.throwUserProfileCard()
+    this.throwUserProfileCard();
   }
 
   /**
    * @private
-   * 
+   *
    * Get the information about the user
-   * and create an svg string which is converted 
-   * to an image 
-   * 
+   * and create an svg string which is converted
+   * to an image
+   *
    */
   private throwUserProfileCard = async () => {
-    const member = this.message.guild?.members.cache.filter((memberData:GuildMember) => {
-      return memberData.displayName == this.author.username
-    }).first()
+    const member = this.message.guild?.members.cache
+      .filter((memberData: GuildMember) => {
+        return memberData.displayName == this.author.username;
+      })
+      .first();
     const image = await svg2png({
       input: `<svg xmlns="http://www.w3.org/2000/svg" width="350" height="136" viewBox="0 0 350 136">
         <g id="template" transform="translate(-208 -209)">
@@ -40,9 +41,9 @@ export class SphinxUserProfile {
     `,
       encoding: 'buffer',
       format: 'png',
-    })
-    this.message.channel.send(new MessageAttachment(
-      image, `${member?.user.username}.png`
-    ))
-  }
+    });
+    this.message.channel.send(
+      new MessageAttachment(image, `${member?.user.username}.png`)
+    );
+  };
 }
