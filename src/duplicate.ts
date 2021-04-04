@@ -18,7 +18,7 @@ class SphinxDuplicateMessage {
     }
 
     public findDuplicateMessage = async () => {
-        const messages = await this.message.channel.messages.fetch({limit:10})
+        const messages = await this.message.channel.messages.fetch({limit:15})
         let userMessages = Array.from(messages.filter((message:Message) => {
             if(message.author.bot){
                 return false
@@ -28,10 +28,10 @@ class SphinxDuplicateMessage {
                 message.content.toLowerCase() == this.message.content.toLowerCase()
             )
         }).keys())
-        if((userMessages.length-1) >= 3) {
+        if((userMessages.length-1) >= 5) {
             this.message.delete()
             const exception = new SphinxException(
-                `${this.author?.tag} repeated a message 3 times. The message has been deleted`,
+                `${this.author?.tag} repeated a message 5 times. The message has been deleted`,
                 this.message
             ).evokeSphinxException()
         }

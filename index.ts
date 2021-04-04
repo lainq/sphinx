@@ -62,6 +62,28 @@ const generateCatImages = (message:Message):void => {
   })
 }
 
+const generateActivities = (message:Message):void => {
+  axios.get("http://www.boredapi.com/api/activity/").then((data:AxiosResponse<any>) => {
+    const value = data.data
+    const embed = createDiscordEmbed({
+      title : `:busts_in_silhouette: ${value.activity}`,
+      author : {name : "Sphinx", image:image},
+      description : "",
+      color : "#7289DA",
+      url : value.link,
+      thumbnail : ""
+    }).addField(":small_blue_diamond: Type", value.type, true)
+      .addField(":man_construction_worker::woman_construction_worker: Participants", value.participants, true)
+      .addField(":moneybag: Price", value.price)
+    message.channel.send(embed)
+  }).catch((err) => {
+    const error = new SphinxException(
+      "Nothing for you right now",
+      message
+    ).evokeSphinxException()
+  })
+}
+
 /**
  * Take the last message sent in the server
  * before the current message and then react to
@@ -241,6 +263,8 @@ client.on('message', async (message: Message) => {
         reactToMessage(message);
       } else if(sphinxCommand[0] == "cat"){
         generateCatImages(message)
+      } else if(sphinxCommand[0] == "bored"){
+        generateActivities(message)
       }
     } else if (command.type == 'github') {
       const username = message.content.split(' ')[1];
