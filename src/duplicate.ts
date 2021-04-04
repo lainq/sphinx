@@ -6,6 +6,11 @@ class SphinxDuplicateMessage {
     private author:undefined | User
     private server:Guild | null
 
+    /**
+     * @constructor
+     * 
+     * @param {Message} message The message class
+     */
     constructor(message:Message) {
         this.message = message
         this.server = this.message.guild
@@ -17,8 +22,20 @@ class SphinxDuplicateMessage {
 
     }
 
+    /**
+     * @public
+     * 
+     * Fethc the last twenty messages from the channel
+     * and filter them by the author and the content of
+     * the message
+     * 
+     * if the length of the collection is above the
+     * limit, throw a warning message
+     * 
+     * @returns {boolean} dummy return
+     */
     public findDuplicateMessage = async () => {
-        const messages = await this.message.channel.messages.fetch({limit:15})
+        const messages = await this.message.channel.messages.fetch({limit:20})
         let userMessages = Array.from(messages.filter((message:Message) => {
             if(message.author.bot){
                 return false
@@ -39,6 +56,11 @@ class SphinxDuplicateMessage {
     }
 }
 
+/**
+ * 
+ * @param message The message object
+ * @returns {boolean}
+ */
 export const isDuplicateMessage = (message:Message):Boolean => {
     const checkDuplicateMessage = new SphinxDuplicateMessage(message).findDuplicateMessage()
     return false

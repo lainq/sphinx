@@ -17,6 +17,14 @@ export class SphinxUserProfile {
     this.throwUserProfileCard()
   }
 
+  /**
+   * @private
+   * 
+   * Get the information about the user
+   * and create an svg string which is converted 
+   * to an image 
+   * 
+   */
   private throwUserProfileCard = async () => {
     const member = this.message.guild?.members.cache.filter((memberData:GuildMember) => {
       return memberData.displayName == this.author.username

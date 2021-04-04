@@ -49,6 +49,12 @@ const isBotCommand = (message: string): any => {
   return {type: null, command: false};
 };
 
+/**
+ * Fetch random cat images from the catapi 
+ * and send in the channel
+ * 
+ * @param message The message class
+ */
 const generateCatImages = (message:Message):void => {
   axios.get("https://api.thecatapi.com/v1/images/search").then((data:AxiosResponse<any>) => {
     const value:Array<any> = Array.from(data.data)
@@ -63,6 +69,12 @@ const generateCatImages = (message:Message):void => {
   })
 }
 
+/**
+ * Fetch some random activities using axios
+ * and send them as embeds 
+ * 
+ * @param message The message class
+ */
 const generateActivities = (message:Message):void => {
   axios.get("http://www.boredapi.com/api/activity/").then((data:AxiosResponse<any>) => {
     const value = data.data
