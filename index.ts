@@ -297,6 +297,13 @@ client.on('message', async (message: Message) => {
         if(message.guild != null){
           const poll = new SphinxPollCommand(message)
         }
+      } else if(sphinxCommand[0] == "count"){
+        if(message.guild != null){
+          const data = message.channel.messages.cache.filter((messageData:Message) => {
+            return messageData.author == message.author
+          }).size
+          message.reply(`You have sent ${data} messages in this server`)
+        }
       }
     } else if (command.type == 'github') {
       const username = message.content.split(' ')[1];
