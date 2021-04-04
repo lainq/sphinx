@@ -15,6 +15,7 @@ import {createDiscordEmbed} from './src/embed';
 import {SphinxGithubCommand} from './src/github';
 import {serverInformation, serverRoleInformation} from './src/commands/server';
 import { SphinxUserProfile } from './src/commands/profile';
+import { isDuplicateMessage } from './src/duplicate';
 
 // Take all the variables from the env
 // file to process.env
@@ -291,6 +292,10 @@ client.on('message', async (message: Message) => {
       })
     );
     message.delete();
+  } else {
+    if(isDuplicateMessage(message)){
+      console.log("Found duplicate message")
+    }
   }
 });
 
