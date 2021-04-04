@@ -302,7 +302,7 @@ client.on('message', async (message: Message) => {
           const data = message.channel.messages.cache.filter((messageData:Message) => {
             return messageData.author == message.author
           }).size
-          message.reply(`You have sent ${data} messages in this server`)
+          message.reply(`You have sent ${data} messages in this channel :slight_smile:`)
         }
       }
     } else if (command.type == 'github') {
