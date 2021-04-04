@@ -14,6 +14,7 @@ import {SphinxKickCommand} from './src/commands/kick';
 import {createDiscordEmbed} from './src/embed';
 import {SphinxGithubCommand} from './src/github';
 import {serverInformation, serverRoleInformation} from './src/commands/server';
+import { SphinxUserProfile } from './src/commands/profile';
 
 // Take all the variables from the env
 // file to process.env
@@ -248,6 +249,7 @@ client.on('message', async (message: Message) => {
         }
       } else if (data[0] == 'profile') {
         if (message.guild != null) {
+          const profile = new SphinxUserProfile(message)
         }
       }
     }
