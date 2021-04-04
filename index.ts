@@ -17,7 +17,7 @@ import {serverInformation, serverRoleInformation} from './src/commands/server';
 import {SphinxUserProfile} from './src/commands/profile';
 import {isDuplicateMessage} from './src/duplicate';
 import axios, {AxiosResponse} from 'axios';
-import {sphinxSimplePoll} from './src/commands/poll';
+import {SphinxPollCommand, sphinxSimplePoll} from './src/commands/poll';
 
 // Take all the variables from the env
 // file to process.env
@@ -289,9 +289,13 @@ client.on('message', async (message: Message) => {
         generateCatImages(message);
       } else if (sphinxCommand[0] == 'bored') {
         generateActivities(message);
-      } else if (sphinxCommand[0] == 'poll') {
+      } else if (sphinxCommand[0] == 'quickpoll') {
         if (message.guild != null) {
           sphinxSimplePoll(message);
+        }
+      } else if(sphinxCommand[0] == "poll"){
+        if(message.guild != null){
+          const poll = new SphinxPollCommand(message)
         }
       }
     } else if (command.type == 'github') {

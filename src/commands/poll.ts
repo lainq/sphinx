@@ -38,3 +38,12 @@ export const sphinxSimplePoll = (message: Message) => {
 
   message.delete();
 };
+
+
+export class SphinxPollCommand {
+  private message:Message
+
+  constructor(message:Message) {
+    this.message = message
+  }
+}
