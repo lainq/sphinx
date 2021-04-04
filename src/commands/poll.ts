@@ -2,7 +2,9 @@ import {Message} from 'discord.js';
 import { SphinxException } from '../error';
 
 interface PollCommand {
+  // the poll question
   question : string,
+  // the choices
   choices: Array<string>
 }
 
@@ -50,12 +52,28 @@ export class SphinxPollCommand {
   private message:Message
   private position:number = 0
 
+  /**
+   * @constructor
+   * @param {Message} message The message object
+   */
   constructor(message:Message) {
     this.message = message
 
     this.createSphinxPoll()
   }
 
+  /**
+   * @public
+   * 
+   * Tokenises the message,validates the parameters
+   * and create the poll.
+   * 
+   * For each time a quotation is encountered in pairs
+   * a new token is added which is later converted
+   * to the PollCommand type
+   * 
+   * @returns {void | null} 
+   */
   public createSphinxPoll = ():void | null => {
     let parameters:string | Array<string> = this.message.content.split(" ")
     parameters = parameters.slice(1, parameters.length).join(" ")
@@ -87,11 +105,27 @@ export class SphinxPollCommand {
     }
   }
 
+  /**
+   * @private
+   * 
+   * @param {string}
+   * @returns {void}
+   */
   private raisePollException = (message:string):void => {
     const error = new SphinxException(message, this.message)
     error.evokeSphinxException()
   }
 
+  /**
+   * @private
+   * 
+   * Verify the poll command based on
+   * certain criteria(s)
+   * 
+   * @param tokens The poll command
+   * @returns {boolean} if the poll command passes
+   * all the conditions
+   */
   private verifyTokenData = (tokens:PollCommand):boolean => {
     if(tokens.question == undefined){
       this.raisePollException("Question not provided with the poll")
@@ -116,6 +150,15 @@ export class SphinxPollCommand {
     return true
   }
 
+  /**
+   * @private
+   * 
+   * Remove odd indexes from the array and slice
+   * the first character of all array elements
+   * 
+   * @param {Array<string>} tokens The token array
+   * @returns {PollCommand} The newly created poll commands
+   */
   private formatTokenArray = (tokens:Array<string>):PollCommand => {
     let returnArray:Array<string> = []
     for(let tokenIndex=0; tokenIndex<tokens.length; tokenIndex++){
@@ -131,6 +174,20 @@ export class SphinxPollCommand {
     }
   }
 
+  /**
+   * @private
+   * 
+   * Returns the current character to tokenise
+   * based on the position property
+   * 
+   * If the position is equal to the length of
+   * the string, return null
+   * else, return the character at the current position
+   * of the string
+   * 
+   * @param {string} data The string data
+   * @returns {null | string} The current character
+   */
   private currentCharacter = (data:string):null | string => {
     if(data.length == this.position){
       return null
