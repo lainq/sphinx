@@ -1,6 +1,6 @@
-import {Message} from 'discord.js';
+import {Client, Message, MessageEmbed} from 'discord.js';
 import {SphinxException} from '../error';
-
+import { getUserAvatar } from './server'
 interface PollCommand {
   // the poll question
   question: string;
@@ -49,14 +49,17 @@ export const sphinxSimplePoll = (message: Message) => {
 
 export class SphinxPollCommand {
   private message: Message;
+  private client:Client
+
   private position: number = 0;
 
   /**
    * @constructor
    * @param {Message} message The message object
    */
-  constructor(message: Message) {
+  constructor(message: Message, client:Client) {
     this.message = message;
+    this.client = client
 
     this.createSphinxPoll();
   }
@@ -102,7 +105,30 @@ export class SphinxPollCommand {
       console.log('error');
       return null;
     }
+
+    this.createPollEmbed(formattedTokens)
   };
+
+  private createPollEmbed = (tokens:PollCommand):void => {
+    const alphabets = String.fromCharCode(...Array.from(Array(123).keys())).slice(97).split("")
+    this.message.channel.send(`:bar_chart: **"${tokens.question}"**`)
+    let reactEmojis:Array<string> = []
+    const clientEmojiList = this.client.emojis.cache
+
+    let embedDescription:string = ""
+    const embed = new MessageEmbed().setColor("#EF551D")
+    for(let choiceIndex=0; choiceIndex<tokens.choices.length; choiceIndex++){
+      const choice:string = tokens.choices[choiceIndex]
+      embedDescription += `:regional_indicator_${alphabets[choiceIndex]}: "${choice}"\n`
+
+      reactEmojis.push(`:regional_indicator_${alphabets[choiceIndex]}:`)
+    }
+    embed.setDescription(embedDescription)
+    this.message.channel.send(embed).then((embedMessage:Message) => {
+      this.message.delete()
+      
+    })
+  }
 
   /**
    * @private

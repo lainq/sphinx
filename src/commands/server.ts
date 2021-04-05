@@ -5,6 +5,7 @@ import {
   Message,
   MessageEmbed,
   Role,
+  User,
 } from 'discord.js';
 import {image} from '../../index';
 
@@ -126,3 +127,9 @@ export const serverRoleInformation = (server: Guild, message: Message) => {
   messageData = '```' + messageData + '```';
   message.channel.send(messageData);
 };
+
+
+export const getUserAvatar = (user:User):string => {
+  const url = user.avatarURL()
+  return url == null ? image : url
+}

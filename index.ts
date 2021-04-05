@@ -295,7 +295,7 @@ client.on('message', async (message: Message) => {
         }
       } else if (sphinxCommand[0] == 'poll') {
         if (message.guild != null) {
-          const poll = new SphinxPollCommand(message);
+          const poll = new SphinxPollCommand(message, client);
         }
       } else if (sphinxCommand[0] == 'count') {
         if (message.guild != null) {
@@ -398,6 +398,7 @@ client.on('guildCreate', (guild: Guild) => {
       url: '',
     })
   );
+  client.user?.setActivity(`Serving ${client.guilds.cache.size} servers`);
 });
 
 client.on('guildMemberAdd', (member: GuildMember) => {
