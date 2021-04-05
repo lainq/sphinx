@@ -60,58 +60,80 @@ export class SphinxGithubCommand {
   };
 }
 
-
-export const sphinxRepositoryCommand = (message:Message) => {
-  const count = (data:string, find:string):number => {
-    let numberCount = 0
-    for(let index=0; index<data.length; index++){
-      if(data[index] == find){
-        numberCount += 1
+/**
+ * Tekes the message and take the first
+ * parameter passed with the command
+ *
+ * check if the parameter is a valid github
+ * repo name, else throw an exception
+ *
+ * fetch data from the api with axios
+ * and display the data in the form
+ * of an embed
+ *
+ * @param message The message class
+ */
+export const sphinxRepositoryCommand = (message: Message) => {
+  const count = (data: string, find: string): number => {
+    let numberCount = 0;
+    for (let index = 0; index < data.length; index++) {
+      if (data[index] == find) {
+        numberCount += 1;
       }
     }
-    return numberCount
-  }
+    return numberCount;
+  };
 
-  const verifyRepoName = (data:string) => {
+  const verifyRepoName = (data: string) => {
     return (
-      data.includes("/") &&
-      count(data, "/") == 1 &&
-      data.split("/").length == 2
-    )
-  }
-  let args:string | string[] = message.content.split(" ")
-  args = args.slice(1, args.length)
-  if(!verifyRepoName(args[0])){
+      data.includes('/') && count(data, '/') == 1 && data.split('/').length == 2
+    );
+  };
+  let args: string | string[] = message.content.split(' ');
+  args = args.slice(1, args.length);
+  if (!verifyRepoName(args[0])) {
     const exception = new SphinxException(
-      "Invalid repo name",
+      'Invalid repo name',
       message
-    ).evokeSphinxException()
+    ).evokeSphinxException();
   } else {
-    const url = (data:string) => {
-      return `https://api.github.com/repos/${data}`
-    }
-    axios.default.get(url(args[0])).then((response:axios.AxiosResponse<any>) => {
-      const data  = response.data
-      const embed = new MessageEmbed().setColor("#2EA043").setTitle(data.full_name).setDescription(
-        data.description == null ? "" : data.description
-      ).setThumbnail(data.owner.avatar_url)
-       .setURL(data.html_url)
-       .addFields([
-         {name:":star: Stars", inline:true, value:data.stargazers_count},
-         {name:":eyes: Watchers", inline:true, value:data.watchers_count},
-         {name:":diamonds: Issues", inline:true, value:data.open_issues_count},
-         {name:":fork_and_knife: Forks", inline:true, value:data.forks},
-         {name:"Language", inline:true, value:data.language == null ? "Unknown" : data.language}
-       ])
+    const url = (data: string) => {
+      return `https://api.github.com/repos/${data}`;
+    };
+    axios.default
+      .get(url(args[0]))
+      .then((response: axios.AxiosResponse<any>) => {
+        const data = response.data;
+        const embed = new MessageEmbed()
+          .setColor('#2EA043')
+          .setTitle(data.full_name)
+          .setDescription(data.description == null ? '' : data.description)
+          .setThumbnail(data.owner.avatar_url)
+          .setURL(data.html_url)
+          .addFields([
+            {name: ':star: Stars', inline: true, value: data.stargazers_count},
+            {name: ':eyes: Watchers', inline: true, value: data.watchers_count},
+            {
+              name: ':diamonds: Issues',
+              inline: true,
+              value: data.open_issues_count,
+            },
+            {name: ':fork_and_knife: Forks', inline: true, value: data.forks},
+            {
+              name: 'Language',
+              inline: true,
+              value: data.language == null ? 'Unknown' : data.language,
+            },
+          ]);
 
-       message.channel.send(embed)
-       
-    }).catch((error) => {
-      console.log(error)
-      const err = new SphinxException(
-        "An error occured while fetching data for you",
-        message
-      ).evokeSphinxException()
-    })
+        message.channel.send(embed);
+      })
+      .catch((error) => {
+        console.log(error);
+        const err = new SphinxException(
+          'An error occured while fetching data for you',
+          message
+        ).evokeSphinxException();
+      });
   }
-}
+};

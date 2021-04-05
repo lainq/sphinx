@@ -33,7 +33,15 @@ config();
 
 // constants
 const token = process.env.TOKEN;
-const prefix: Array<string> = ['=', '!', ';run', 'sphinx', 'github', '%', "repo"];
+const prefix: Array<string> = [
+  '=',
+  '!',
+  ';run',
+  'sphinx',
+  'github',
+  '%',
+  'repo',
+];
 export const image = 'http://i.imgur.com/p2qNFag.png';
 
 // the discord clinet
@@ -383,7 +391,7 @@ client.on('message', async (message: Message) => {
 
           message.channel.send(embed);
         });
-      } 
+      }
     } else if (command.type == 'github') {
       const username = message.content.split(' ')[1];
       if (username == undefined) {
@@ -396,9 +404,9 @@ client.on('message', async (message: Message) => {
           username,
           message
         ).fetchUserData();
-      } 
-    } else if(command.type == "repo"){ 
-      sphinxRepositoryCommand(message)
+      }
+    } else if (command.type == 'repo') {
+      sphinxRepositoryCommand(message);
     } else if (command.type == '%') {
       const data = message.content.slice(1, message.content.length).split(' ');
       if (data[0] == 'server' || data[0] == 'serverinfo') {
