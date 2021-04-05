@@ -1,6 +1,5 @@
 import {Client, Message, MessageEmbed} from 'discord.js';
 import {SphinxException} from '../error';
-import { getUserAvatar } from './server'
 interface PollCommand {
   // the poll question
   question: string;
@@ -113,7 +112,6 @@ export class SphinxPollCommand {
     const alphabets = String.fromCharCode(...Array.from(Array(123).keys())).slice(97).split("")
     this.message.channel.send(`:bar_chart: **"${tokens.question}"**`)
     let reactEmojis:Array<string> = []
-    const clientEmojiList = this.client.emojis.cache
 
     let embedDescription:string = ""
     const embed = new MessageEmbed().setColor("#EF551D")
@@ -127,6 +125,7 @@ export class SphinxPollCommand {
     this.message.channel.send(embed).then((embedMessage:Message) => {
       this.message.delete()
       
+      console.log()
     })
   }
 

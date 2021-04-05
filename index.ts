@@ -5,6 +5,7 @@ import {
   GuildEmojiManager,
   GuildMember,
   Message,
+  User,
 } from 'discord.js';
 import {Fcal, FcalError} from 'fcal';
 import {SphinxException} from './src/error';
@@ -13,7 +14,7 @@ import {SphinxCodeRunner} from './src/run/run';
 import {SphinxKickCommand} from './src/commands/kick';
 import {createDiscordEmbed} from './src/embed';
 import {SphinxGithubCommand} from './src/github';
-import {serverInformation, serverRoleInformation} from './src/commands/server';
+import {getUserAvatar, serverInformation, serverRoleInformation} from './src/commands/server';
 import {SphinxUserProfile} from './src/commands/profile';
 import {isDuplicateMessage} from './src/duplicate';
 import axios, {AxiosResponse} from 'axios';
@@ -307,6 +308,25 @@ client.on('message', async (message: Message) => {
           message.reply(
             `You have sent ${data} messages in this channel :slight_smile:`
           );
+        }
+      } else if(sphinxCommand[0] == "avatar"){
+        const mentions = message.mentions
+        if(mentions.everyone){
+          message.reply("Sorry, you can't mention everyone")
+        } else {
+          if(message.mentions.users.size > 0){
+            message.mentions.users.forEach((user:User) => {
+              const avatar = user.avatarURL()
+              message.channel.send(
+                avatar == null ? "Sadly, the user doesn't have a dp" : avatar
+              )
+            })
+          } else {
+            const avatar = message.author.avatarURL()
+            message.channel.send(
+              avatar == null ? "Sadly, the user doesn't have a dp" : avatar
+            )
+          }
         }
       }
     } else if (command.type == 'github') {
