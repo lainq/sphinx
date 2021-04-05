@@ -17,7 +17,11 @@ import {SphinxCodeRunner} from './src/run/run';
 import {SphinxKickCommand} from './src/commands/kick';
 import {createDiscordEmbed} from './src/embed';
 import {SphinxGithubCommand} from './src/github';
-import {getUserAvatar, serverInformation, serverRoleInformation} from './src/commands/server';
+import {
+  getUserAvatar,
+  serverInformation,
+  serverRoleInformation,
+} from './src/commands/server';
 import {SphinxUserProfile} from './src/commands/profile';
 import {isDuplicateMessage} from './src/duplicate';
 import axios, {AxiosResponse} from 'axios';
@@ -312,53 +316,73 @@ client.on('message', async (message: Message) => {
             `You have sent ${data} messages in this channel :slight_smile:`
           );
         }
-      } else if(sphinxCommand[0] == "avatar"){
-        const mentions = message.mentions
-        if(mentions.everyone){
-          message.reply("Sorry, you can't mention everyone")
+      } else if (sphinxCommand[0] == 'avatar') {
+        const mentions = message.mentions;
+        if (mentions.everyone) {
+          message.reply("Sorry, you can't mention everyone");
         } else {
-          if(message.mentions.users.size > 0){
-            message.mentions.users.forEach((user:User) => {
-              const avatar = user.avatarURL()
+          if (message.mentions.users.size > 0) {
+            message.mentions.users.forEach((user: User) => {
+              const avatar = user.avatarURL();
               message.channel.send(
                 avatar == null ? "Sadly, the user doesn't have a dp" : avatar
-              )
-            })
+              );
+            });
           } else {
-            const avatar = message.author.avatarURL()
+            const avatar = message.author.avatarURL();
             message.channel.send(
               avatar == null ? "Sadly, the user doesn't have a dp" : avatar
-            )
+            );
           }
-        } 
-      } else if(sphinxCommand[0] == "channel") {
-        let channels = message.mentions.channels
-        if(channels.size == 0){
-          if(message.channel.type == "text"){
+        }
+      } else if (sphinxCommand[0] == 'channel') {
+        let channels = message.mentions.channels;
+        if (channels.size == 0) {
+          if (message.channel.type == 'text') {
             channels = new Collection<string, TextChannel>([
-              [message.channel.id.toString(), message.channel]        
-            ])
+              [message.channel.id.toString(), message.channel],
+            ]);
           }
         }
 
-        channels.forEach((channel:TextChannel) => {
-          const lastMessage:string|undefined = channel.messages.cache.filter((channel:Message) => {
-            return channel.author.bot == false
-          }).last()?.content
+        channels.forEach((channel: TextChannel) => {
+          const lastMessage: string | undefined = channel.messages.cache
+            .filter((channel: Message) => {
+              return channel.author.bot == false;
+            })
+            .last()?.content;
 
-          const embed = new MessageEmbed().setColor("#7289DA")
-          embed.setTitle(`About #${channel.name}`)
-          embed.setAuthor("Sphinx", image)
+          const embed = new MessageEmbed().setColor('#7289DA');
+          embed.setTitle(`About #${channel.name}`);
+          embed.setAuthor('Sphinx', image);
 
           embed.addFields([
-            {name:":name_badge: Name", value:channel.name, inline:true},
-            {name:":small_blue_diamond: Type", value:channel.type, inline:true},
-            {name:":stop_button: Topic", value:channel.topic == null ? "**No topic available**" : channel.topic, inline:true},
-            {name:":speech_balloon: Last Message", inline:true, value:lastMessage == undefined ? "**Idk the what the last message is!!**" : lastMessage}
-          ])
+            {name: ':name_badge: Name', value: channel.name, inline: true},
+            {
+              name: ':small_blue_diamond: Type',
+              value: channel.type,
+              inline: true,
+            },
+            {
+              name: ':stop_button: Topic',
+              value:
+                channel.topic == null
+                  ? '**No topic available**'
+                  : channel.topic,
+              inline: true,
+            },
+            {
+              name: ':speech_balloon: Last Message',
+              inline: true,
+              value:
+                lastMessage == undefined
+                  ? '**Idk the what the last message is!!**'
+                  : lastMessage,
+            },
+          ]);
 
-          message.channel.send(embed)
-        })
+          message.channel.send(embed);
+        });
       }
     } else if (command.type == 'github') {
       const username = message.content.split(' ')[1];

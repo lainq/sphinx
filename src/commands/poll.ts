@@ -48,7 +48,7 @@ export const sphinxSimplePoll = (message: Message) => {
 
 export class SphinxPollCommand {
   private message: Message;
-  private client:Client
+  private client: Client;
 
   private position: number = 0;
 
@@ -56,9 +56,9 @@ export class SphinxPollCommand {
    * @constructor
    * @param {Message} message The message object
    */
-  constructor(message: Message, client:Client) {
+  constructor(message: Message, client: Client) {
     this.message = message;
-    this.client = client
+    this.client = client;
 
     this.createSphinxPoll();
   }
@@ -105,47 +105,53 @@ export class SphinxPollCommand {
       return null;
     }
 
-    this.createPollEmbed(formattedTokens)
+    this.createPollEmbed(formattedTokens);
   };
 
   /**
    * @private
-   * 
+   *
    * Grab a range of alphabets by converting ascii
    * characters into alpha characters with the `fromCharCode`
    * function
-   * 
+   *
    * Send the question in the channel
    * for every choices, append the choice to the embed
    * description along with the `regional_indicator_<idk>`
    * emoji based on the number of the choice
-   * 
+   *
    * Send the message-embed in the channel and delete
    * the user's message
-   * 
+   *
    * @param {PollCommand} tokens The poll command object containing the questions and
    * the answers
    */
-  private createPollEmbed = (tokens:PollCommand):void => {
-    const alphabets = String.fromCharCode(...Array.from(Array(123).keys())).slice(97).split("")
-    this.message.channel.send(`:bar_chart: **"${tokens.question}"**`)
-    let reactEmojis:Array<string> = []
+  private createPollEmbed = (tokens: PollCommand): void => {
+    const alphabets = String.fromCharCode(...Array.from(Array(123).keys()))
+      .slice(97)
+      .split('');
+    this.message.channel.send(`:bar_chart: **"${tokens.question}"**`);
+    let reactEmojis: Array<string> = [];
 
-    let embedDescription:string = ""
-    const embed = new MessageEmbed().setColor("#EF551D")
-    for(let choiceIndex=0; choiceIndex<tokens.choices.length; choiceIndex++){
-      const choice:string = tokens.choices[choiceIndex]
-      embedDescription += `:regional_indicator_${alphabets[choiceIndex]}: "${choice}"\n`
+    let embedDescription: string = '';
+    const embed = new MessageEmbed().setColor('#EF551D');
+    for (
+      let choiceIndex = 0;
+      choiceIndex < tokens.choices.length;
+      choiceIndex++
+    ) {
+      const choice: string = tokens.choices[choiceIndex];
+      embedDescription += `:regional_indicator_${alphabets[choiceIndex]}: "${choice}"\n`;
 
-      reactEmojis.push(`:regional_indicator_${alphabets[choiceIndex]}:`)
+      reactEmojis.push(`:regional_indicator_${alphabets[choiceIndex]}:`);
     }
-    embed.setDescription(embedDescription)
-    this.message.channel.send(embed).then((embedMessage:Message) => {
-      this.message.delete()
-      
-      console.log()
-    })
-  }
+    embed.setDescription(embedDescription);
+    this.message.channel.send(embed).then((embedMessage: Message) => {
+      this.message.delete();
+
+      console.log();
+    });
+  };
 
   /**
    * @private
