@@ -1,9 +1,8 @@
-import {Message} from 'discord.js';
+import {Message, MessageEmbed} from 'discord.js';
 import * as axios from 'axios';
 import {SphinxException} from './error';
 import {createDiscordEmbed} from './embed';
 import {image} from '../index';
-import { count } from 'node:console';
 
 export class SphinxGithubCommand {
   private message: Message;
@@ -91,5 +90,28 @@ export const sphinxRepositoryCommand = (message:Message) => {
     const url = (data:string) => {
       return `https://api.github.com/repos/${data}`
     }
+    axios.default.get(url(args[0])).then((response:axios.AxiosResponse<any>) => {
+      const data  = response.data
+      const embed = new MessageEmbed().setColor("#2EA043").setTitle(data.full_name).setDescription(
+        data.description == null ? "" : data.description
+      ).setThumbnail(data.owner.avatar_url)
+       .setURL(data.html_url)
+       .addFields([
+         {name:":star: Stars", inline:true, value:data.stargazers_count},
+         {name:":eyes: Watchers", inline:true, value:data.watchers_count},
+         {name:":diamonds: Issues", inline:true, value:data.open_issues_count},
+         {name:":fork_and_knife: Forks", inline:true, value:data.forks},
+         {name:"Language", inline:true, value:data.language == null ? "Unknown" : data.language}
+       ])
+
+       message.channel.send(embed)
+       
+    }).catch((error) => {
+      console.log(error)
+      const err = new SphinxException(
+        "An error occured while fetching data for you",
+        message
+      ).evokeSphinxException()
+    })
   }
 }
