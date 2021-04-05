@@ -1,10 +1,13 @@
 import {config, parse} from 'dotenv';
 import {
   Client,
+  Collection,
   Guild,
   GuildEmojiManager,
   GuildMember,
   Message,
+  MessageEmbed,
+  TextChannel,
   User,
 } from 'discord.js';
 import {Fcal, FcalError} from 'fcal';
@@ -327,7 +330,35 @@ client.on('message', async (message: Message) => {
               avatar == null ? "Sadly, the user doesn't have a dp" : avatar
             )
           }
+        } 
+      } else if(sphinxCommand[0] == "channel") {
+        let channels = message.mentions.channels
+        if(channels.size == 0){
+          if(message.channel.type == "text"){
+            channels = new Collection<string, TextChannel>([
+              [message.channel.id.toString(), message.channel]        
+            ])
+          }
         }
+
+        channels.forEach((channel:TextChannel) => {
+          const lastMessage:string|undefined = channel.messages.cache.filter((channel:Message) => {
+            return channel.author.bot == false
+          }).last()?.content
+
+          const embed = new MessageEmbed().setColor("#7289DA")
+          embed.setTitle(`About #${channel.name}`)
+          embed.setAuthor("Sphinx", image)
+
+          embed.addFields([
+            {name:":name_badge: Name", value:channel.name, inline:true},
+            {name:":small_blue_diamond: Type", value:channel.type, inline:true},
+            {name:":stop_button: Topic", value:channel.topic == null ? "**No topic available**" : channel.topic, inline:true},
+            {name:":speech_balloon: Last Message", inline:true, value:lastMessage == undefined ? "**Idk the what the last message is!!**" : lastMessage}
+          ])
+
+          message.channel.send(embed)
+        })
       }
     } else if (command.type == 'github') {
       const username = message.content.split(' ')[1];
