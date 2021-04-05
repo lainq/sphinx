@@ -128,7 +128,11 @@ export const serverRoleInformation = (server: Guild, message: Message) => {
   message.channel.send(messageData);
 };
 
-
+/**
+ * Gets the user avatar and return the default image
+ * if the avatar url is null, else return the 
+ * avatar url
+ */
 export const getUserAvatar = (user:User):string => {
   const url = user.avatarURL()
   return url == null ? image : url
