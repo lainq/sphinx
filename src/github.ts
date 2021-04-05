@@ -3,6 +3,7 @@ import * as axios from 'axios';
 import {SphinxException} from './error';
 import {createDiscordEmbed} from './embed';
 import {image} from '../index';
+import { count } from 'node:console';
 
 export class SphinxGithubCommand {
   private message: Message;
@@ -58,4 +59,37 @@ export class SphinxGithubCommand {
         ).evokeSphinxException();
       });
   };
+}
+
+
+export const sphinxRepositoryCommand = (message:Message) => {
+  const count = (data:string, find:string):number => {
+    let numberCount = 0
+    for(let index=0; index<data.length; index++){
+      if(data[index] == find){
+        numberCount += 1
+      }
+    }
+    return numberCount
+  }
+
+  const verifyRepoName = (data:string) => {
+    return (
+      data.includes("/") &&
+      count(data, "/") == 1 &&
+      data.split("/").length == 2
+    )
+  }
+  let args:string | string[] = message.content.split(" ")
+  args = args.slice(1, args.length)
+  if(!verifyRepoName(args[0])){
+    const exception = new SphinxException(
+      "Invalid repo name",
+      message
+    ).evokeSphinxException()
+  } else {
+    const url = (data:string) => {
+      return `https://api.github.com/repos/${data}`
+    }
+  }
 }
