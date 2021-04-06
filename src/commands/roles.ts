@@ -1,5 +1,6 @@
-import { Client, Collection, GuildMember, Message, Role, User } from "discord.js";
+import { Client, Collection, Guild, GuildMember, Message, Role, User } from "discord.js";
 import { SphinxException } from "../error";
+import { getUserDisplayName } from "./server";
 
 export class SphinxRoleAssignment {
     private message:Message
@@ -34,7 +35,15 @@ export class SphinxRoleAssignment {
             return null
         }
 
-        console.log("Suggess")
+        this.message.guild.members.cache.filter((member:GuildMember) => {
+            return member.id == this.mentions.first()?.id
+        }).forEach((member:GuildMember) => {
+            this.roles.forEach((role:Role) => {
+                member.roles.add(role).then((value:GuildMember) => {
+                    this.message.channel.send(`Assigned role to ${getUserDisplayName(value)}`)
+                })
+            })
+        })
     }
 
     private throwRoleException = (exceptionMessage:string):SphinxException => {
