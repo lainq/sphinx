@@ -50,8 +50,8 @@ export const serverInformation = (server: Guild, message: Message) => {
     .addField(
       `:busts_in_silhouette: Members(${server.memberCount})`,
       server.members.cache.filter((member: GuildMember) => {
-        return member.presence.status == 'online';
-      }).size + ' online',
+        return !member.user.bot
+      }).size + ' human(s)',
       true
     )
     .addField(
