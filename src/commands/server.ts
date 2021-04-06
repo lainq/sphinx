@@ -138,14 +138,13 @@ export const getUserAvatar = (user: User): string => {
   return url == null ? image : url;
 };
 
-
-export const getUserDisplayName = (value:GuildMember | undefined):string => {
-  if(value == null){
-    return ""
+export const getUserDisplayName = (value: GuildMember | undefined): string => {
+  if (value == null) {
+    return '';
   }
-  const name:string | null = value.nickname
-  if(name == null){
-    return value.displayName
+  const name: string | null = value.nickname;
+  if (name == null) {
+    return value.displayName;
   }
-  return name
-}
+  return name;
+};
