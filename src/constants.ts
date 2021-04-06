@@ -1,3 +1,4 @@
+import { Client, Message, User } from "discord.js"
 
 /**
  * Regional Indictor emoji unicodes
@@ -32,3 +33,16 @@ export const regionalIndicators = Object.values({
     ":regional_indicator_z:" : "🇿",
 })
 
+/**
+ * Checks if the bot is mentioned in the message
+ * 
+ * @param {Message} message The message class
+ * @param {Client} client The client object
+ * @returns {boolean}
+ */
+export const botMentioned = (message:Message, client:Client):boolean => {
+    const mentions = message.mentions.users.filter((member:User) => {
+        return member.id == client.user?.id
+    })
+    return mentions.size > 0
+}

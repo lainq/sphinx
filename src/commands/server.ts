@@ -139,7 +139,10 @@ export const getUserAvatar = (user: User): string => {
 };
 
 
-export const getUserDisplayName = (value:GuildMember):string => {
+export const getUserDisplayName = (value:GuildMember | undefined):string => {
+  if(value == null){
+    return ""
+  }
   const name:string | null = value.nickname
   if(name == null){
     return value.displayName

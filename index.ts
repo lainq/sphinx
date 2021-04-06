@@ -19,6 +19,7 @@ import {createDiscordEmbed} from './src/embed';
 import {SphinxGithubCommand, sphinxRepositoryCommand} from './src/github';
 import {
   getUserAvatar,
+  getUserDisplayName,
   serverInformation,
   serverRoleInformation,
 } from './src/commands/server';
@@ -27,6 +28,7 @@ import {isDuplicateMessage} from './src/duplicate';
 import axios, {AxiosResponse} from 'axios';
 import {SphinxPollCommand, sphinxSimplePoll} from './src/commands/poll';
 import { SphinxRoleAssignment } from './src/commands/roles';
+import { botMentioned } from './src/constants';
 
 // Take all the variables from the env
 // file to process.env
@@ -485,6 +487,14 @@ client.on('message', async (message: Message) => {
   } else {
     if (isDuplicateMessage(message)) {
       console.log('Found duplicate message');
+    } else if(botMentioned(message, client)) {
+      if(message.guild != null) {
+        message.channel.send(`Why did you ping me ${getUserDisplayName(
+          message.guild?.members.cache.filter((member:GuildMember) => {
+            return member.id == message.author.id
+          }).first()
+        )} :angry: ??`)
+      }
     }
   }
 });
