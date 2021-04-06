@@ -1,4 +1,8 @@
 
+/**
+ * Regional Indictor emoji unicodes
+ * for reacting to the polls
+ */
 export const regionalIndicators = Object.values({
     ":regional_indicator_a:" : "🇦",
     ":regional_indicator_b:" : "🇧",

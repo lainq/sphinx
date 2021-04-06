@@ -9,6 +9,12 @@ export class SphinxRoleAssignment {
     private roles:Collection<string, Role>
     private client:GuildMember | undefined
 
+    /**
+     * @constructor
+     * 
+     * @param message The message class
+     * @param client The client object
+     */
     constructor(message:Message, client:Client) {
         this.message = message
         this.author = this.message.guild?.members.cache.filter((member:GuildMember) => {
@@ -23,6 +29,15 @@ export class SphinxRoleAssignment {
         this.addUserRoles()
     }
 
+    /**
+     * @public
+     * 
+     * Verify the parameters passed in along with
+     * the command and assign roles to specific
+     * users
+     * 
+     * @returns {void | null}
+     */
     public addUserRoles = ():void | null => {
         if(!this.verifyCommandParameters() || this.message.guild == null){
             return null
@@ -46,6 +61,14 @@ export class SphinxRoleAssignment {
         })
     }
 
+    /**
+     * @private
+     * 
+     * Throws an exception message
+     * 
+     * @param exceptionMessage The exception message
+     * @returns {SphinxException}
+     */
     private throwRoleException = (exceptionMessage:string):SphinxException => {
         const exception = new SphinxException(exceptionMessage, this.message)
         exception.evokeSphinxException()
@@ -53,6 +76,15 @@ export class SphinxRoleAssignment {
         return exception
     }
 
+    /**
+     * @private
+     * 
+     * Verify the size of the user mentions and
+     * the role mentions to continue to assign
+     * roles
+     * 
+     * @returns {boolean}
+     */
     private verifyCommandParameters = ():boolean => {
         if(this.mentions.size != 1 || this.roles.size != 1){
             const exception = new SphinxException(
