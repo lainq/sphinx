@@ -428,7 +428,7 @@ client.on('message', async (message: Message) => {
       const colonCommand = message.content.split(" ")
       const commandName = colonCommand[0].slice(1, colonCommand[0].length)
       if(commandName == "role"){
-        const role = new SphinxRoleAssignment(message)
+        const role = new SphinxRoleAssignment(message, client)
       }
     } 
   } else if (bad.contains) {
