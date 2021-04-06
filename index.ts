@@ -26,6 +26,7 @@ import {SphinxUserProfile} from './src/commands/profile';
 import {isDuplicateMessage} from './src/duplicate';
 import axios, {AxiosResponse} from 'axios';
 import {SphinxPollCommand, sphinxSimplePoll} from './src/commands/poll';
+import { SphinxRoleAssignment } from './src/commands/roles';
 
 // Take all the variables from the env
 // file to process.env
@@ -41,6 +42,7 @@ const prefix: Array<string> = [
   'github',
   '%',
   'repo',
+  "$"
 ];
 export const image = 'http://i.imgur.com/p2qNFag.png';
 
@@ -422,7 +424,13 @@ client.on('message', async (message: Message) => {
           const profile = new SphinxUserProfile(message);
         }
       }
-    }
+    } else if(command.type == "$"){
+      const colonCommand = message.content.split(" ")
+      const commandName = colonCommand[0].slice(1, colonCommand[0].length)
+      if(commandName == "role"){
+        const role = new SphinxRoleAssignment(message)
+      }
+    } 
   } else if (bad.contains) {
     // Check if the message contains
     // any bad words
