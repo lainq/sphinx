@@ -393,6 +393,19 @@ client.on('message', async (message: Message) => {
 
           message.channel.send(embed);
         });
+      } else if(sphinxCommand[0] == "quote"){
+        axios.get("https://api.quotable.io/random").then((response:AxiosResponse<any>) => {
+          const data = response.data
+          const embed = new MessageEmbed().setColor("#9147ff").setDescription(
+            `>>> ${data.content}`
+          ).addField(":pencil: Author", data.author, true)
+          message.channel.send(embed)
+        }).catch((err) => {
+          const error = new SphinxException(
+            "An error occured while fetching quotes for you",
+            message
+          ).evokeSphinxException()
+        })
       }
     } else if (command.type == 'github') {
       const username = message.content.split(' ')[1];
