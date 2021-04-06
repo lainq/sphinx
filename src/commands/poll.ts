@@ -1,4 +1,5 @@
 import {Client, Message, MessageEmbed} from 'discord.js';
+import { regionalIndicators } from '../constants';
 import {SphinxException} from '../error';
 interface PollCommand {
   // the poll question
@@ -126,7 +127,7 @@ export class SphinxPollCommand {
    * @param {PollCommand} tokens The poll command object containing the questions and
    * the answers
    */
-  private createPollEmbed = (tokens: PollCommand): void => {
+  private createPollEmbed = async (tokens: PollCommand) => {
     const alphabets = String.fromCharCode(...Array.from(Array(123).keys()))
       .slice(97)
       .split('');
@@ -146,7 +147,10 @@ export class SphinxPollCommand {
       reactEmojis.push(`:regional_indicator_${alphabets[choiceIndex]}:`);
     }
     embed.setDescription(embedDescription);
-    this.message.channel.send(embed).then((embedMessage: Message) => {
+    this.message.channel.send(embed).then(async(embedMessage: Message) => {
+      for(const idx in reactEmojis){
+        await embedMessage.react(regionalIndicators[idx])
+      }
       this.message.delete();
 
       console.log();
