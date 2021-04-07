@@ -1,0 +1,1 @@
+import * as alexa from 'alexa-bot-api'
