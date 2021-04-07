@@ -29,7 +29,7 @@ import axios, {AxiosResponse} from 'axios';
 import {SphinxPollCommand, sphinxSimplePoll} from './src/commands/poll';
 import {SphinxRoleAssignment} from './src/commands/roles';
 import {botMentioned} from './src/constants';
-import { createBotReply } from './src/reply';
+import {createBotReply} from './src/reply';
 
 // Take all the variables from the env
 // file to process.env
@@ -49,7 +49,7 @@ const prefix: Array<string> = [
 ];
 export const image = 'http://i.imgur.com/p2qNFag.png';
 
-let speak = false
+let speak = false;
 // the discord clinet
 const client = new Client({ws: {intents: ['GUILD_MESSAGES', 'GUILDS']}});
 
@@ -254,7 +254,7 @@ client.on('message', async (message: Message) => {
         }
       }
     } else if (command.type == 'sphinx') {
-      if(bad.contains){
+      if (bad.contains) {
         const warning = createDiscordEmbed({
           title: `Don't use bad words in the ${message.guild?.name} server`,
           author: {
@@ -272,16 +272,15 @@ client.on('message', async (message: Message) => {
         message.channel.send(warning);
         message.delete();
       } else {
-        const dataLength = message.content.split(" ").length - 1
-        if(dataLength > 0){
-          let question:string | Array<string> = message.content.split(" ")
-          question = question.slice(1, question.length).join(" ")
-          createBotReply(message, question)
+        const dataLength = message.content.split(' ').length - 1;
+        if (dataLength > 0) {
+          let question: string | Array<string> = message.content.split(' ');
+          question = question.slice(1, question.length).join(' ');
+          createBotReply(message, question);
         } else {
           sphinxMessage(message);
         }
       }
-      
     } else if (command.type == ';run') {
       const executor = new SphinxCodeRunner(message);
     } else if (command.type == '!') {
@@ -533,21 +532,21 @@ client.on('message', async (message: Message) => {
         );
       }
     } else {
-      console.log(speak)
-      if(message.content.toLowerCase().includes("sphinx")){
-        speak = true
+      console.log(speak);
+      if (message.content.toLowerCase().includes('sphinx')) {
+        speak = true;
       }
 
-      if(message.content.toLowerCase().includes("stop sphinx") ||
-        message.content.toLowerCase().includes("sphinx stop")
+      if (
+        message.content.toLowerCase().includes('stop sphinx') ||
+        message.content.toLowerCase().includes('sphinx stop')
       ) {
-        speak = false
+        speak = false;
       }
 
-      if(speak){
-        createBotReply(message, message.content)
-      } 
-
+      if (speak) {
+        createBotReply(message, message.content);
+      }
     }
   }
 });
