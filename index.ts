@@ -48,8 +48,8 @@ const prefix: Array<string> = [
   '$',
 ];
 export const image = 'http://i.imgur.com/p2qNFag.png';
-let speak = false
 
+let speak = false
 // the discord clinet
 const client = new Client({ws: {intents: ['GUILD_MESSAGES', 'GUILDS']}});
 
@@ -534,19 +534,20 @@ client.on('message', async (message: Message) => {
       }
     } else {
       console.log(speak)
-      
-      const content = message.content.toLowerCase()
-      if(content.includes("stop shinx") || content.includes("sphinx stop")){
+      if(message.content.toLowerCase().includes("sphinx")){
+        speak = true
+      }
+
+      if(message.content.toLowerCase().includes("stop sphinx") ||
+        message.content.toLowerCase().includes("sphinx stop")
+      ) {
         speak = false
       }
 
-      if(speak) {
+      if(speak){
         createBotReply(message, message.content)
-      } else {
-        if(message.content.toLowerCase().includes("sphinx")) {
-          speak = true
-        }
-      }
+      } 
+
     }
   }
 });
