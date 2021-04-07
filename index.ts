@@ -29,6 +29,7 @@ import axios, {AxiosResponse} from 'axios';
 import {SphinxPollCommand, sphinxSimplePoll} from './src/commands/poll';
 import {SphinxRoleAssignment} from './src/commands/roles';
 import {botMentioned} from './src/constants';
+import { createBotReply } from './src/reply';
 
 // Take all the variables from the env
 // file to process.env
@@ -47,6 +48,7 @@ const prefix: Array<string> = [
   '$',
 ];
 export const image = 'http://i.imgur.com/p2qNFag.png';
+let speak = false
 
 // the discord clinet
 const client = new Client({ws: {intents: ['GUILD_MESSAGES', 'GUILDS']}});
@@ -252,7 +254,34 @@ client.on('message', async (message: Message) => {
         }
       }
     } else if (command.type == 'sphinx') {
-      sphinxMessage(message);
+      if(bad.contains){
+        const warning = createDiscordEmbed({
+          title: `Don't use bad words in the ${message.guild?.name} server`,
+          author: {
+            name: 'Code Roller',
+            image: image,
+          },
+          color: '#e20202',
+          description: `
+          ${bad.badWord} found in a message
+          `,
+          thumbnail: image,
+          url: '',
+        });
+        message.author.send(warning);
+        message.channel.send(warning);
+        message.delete();
+      } else {
+        const dataLength = message.content.split(" ").length - 1
+        if(dataLength > 0){
+          let question:string | Array<string> = message.content.split(" ")
+          question = question.slice(1, question.length).join(" ")
+          createBotReply(message, question)
+        } else {
+          sphinxMessage(message);
+        }
+      }
+      
     } else if (command.type == ';run') {
       const executor = new SphinxCodeRunner(message);
     } else if (command.type == '!') {
@@ -502,6 +531,21 @@ client.on('message', async (message: Message) => {
               .first()
           )} :angry: ??`
         );
+      }
+    } else {
+      console.log(speak)
+      
+      const content = message.content.toLowerCase()
+      if(content.includes("stop shinx") || content.includes("sphinx stop")){
+        speak = false
+      }
+
+      if(speak) {
+        createBotReply(message, message.content)
+      } else {
+        if(message.content.toLowerCase().includes("sphinx")) {
+          speak = true
+        }
       }
     }
   }
