@@ -63,7 +63,6 @@ export class SphinxDataStore {
     public joinServer = (serverId:string):void => {
         if(this.data.get(serverId) == undefined) {
             this.data.set(serverId, [])
-            console.log("Hi")
         }
         
         this.writeFileData(
@@ -73,4 +72,31 @@ export class SphinxDataStore {
         )
     }
 
+    public addMessage = (serverId:string, memberId:string) => {
+        let data = this.data.get(serverId)
+        if(data == undefined) {
+            this.joinServer(serverId)
+            data = this.data.get(serverId)
+        }
+
+        for(let idx=0; idx<data.length; idx++){
+            let currentUser = data[idx]
+            if(currentUser.id == memberId){
+                currentUser.messages += 1
+                this.writeFileData(
+                    this.path,
+                    Object.fromEntries(this.data),
+                    true
+                )
+                return null
+            }
+        }
+
+        data.push({id : memberId, messages:1})
+        this.writeFileData(
+            this.path,
+            Object.fromEntries(this.data),
+            true
+        )
+    }
 }
