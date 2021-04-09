@@ -7,3 +7,5 @@ const data = new SphinxDataStore({
     databasePath : join(cwd(), "test.json"),
     exists : false
 })
+
+data.addMessage("100", "383884848")
