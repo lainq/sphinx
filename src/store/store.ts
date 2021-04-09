@@ -11,18 +11,21 @@ export class SphinxDataStore {
     private path: string
     private exists:boolean
 
-    private data:string = ""
+    private data:Map<string, any> = new Map<string, any>()
 
     constructor(data:DataStore) {
         this.database = data.databaseName
         this.path = data.databasePath
         this.exists = data.exists
 
-        this.data = this.loadFromFile(this.path)
-        console.log(this.data)
+        this.data = this.createArray(this.loadFromFile(this.path))
     }
 
-    private loadFromFile = (path:string):string => {
+    private createArray = (loadValue:object):Map<string, any> => {
+        return new Map<string, any>(Object.entries(loadValue))
+    }
+
+    private loadFromFile = (path:string):object => {
         if(!this.fileExists(path)) {
             return JSON.parse(this.writeFileData(path, {}, true))
         }
@@ -58,7 +61,16 @@ export class SphinxDataStore {
     }
 
     public joinServer = (serverId:string):void => {
-        this.data[serverId.toString()] 
+        if(this.data.get(serverId) == undefined) {
+            this.data.set(serverId, [])
+            console.log("Hi")
+        }
+        
+        this.writeFileData(
+            this.path,
+            Object.fromEntries(this.data),
+            true
+        )
     }
 
 }
