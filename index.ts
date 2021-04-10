@@ -33,6 +33,7 @@ import {createBotReply} from './src/reply';
 import { SphinxDataStore } from './src/store/store';
 import { join } from 'path';
 import { cwd } from 'process';
+import { userScore } from './src/commands/score';
 
 // Take all the variables from the env
 // file to process.env
@@ -452,6 +453,12 @@ client.on('message', async (message: Message) => {
               message
             ).evokeSphinxException();
           });
+      } else if(sphinxCommand[0] == "score"){
+        if(message.guild != null){
+          message.reply(
+            `Your score is ${userScore(message.guild, message.author, store)}`
+          )
+        }
       }
     } else if (command.type == 'github') {
       const username = message.content.split(' ')[1];
