@@ -30,20 +30,20 @@ import {SphinxPollCommand, sphinxSimplePoll} from './src/commands/poll';
 import {SphinxRoleAssignment} from './src/commands/roles';
 import {botMentioned} from './src/constants';
 import {createBotReply} from './src/reply';
-import { SphinxDataStore } from './src/store/store';
-import { join } from 'path';
-import { cwd } from 'process';
-import { userScore } from './src/commands/score';
+import {SphinxDataStore} from './src/store/store';
+import {join} from 'path';
+import {cwd} from 'process';
+import {userScore} from './src/commands/score';
 
 // Take all the variables from the env
 // file to process.env
 config();
 
 export const store = new SphinxDataStore({
-  databaseName : "sphinx",
-  databasePath : join(cwd(), "src", "store", "json", "sphinx.json"),
-  exists : false
-})
+  databaseName: 'sphinx',
+  databasePath: join(cwd(), 'src', 'store', 'json', 'sphinx.json'),
+  exists: false,
+});
 
 // constants
 const token = process.env.TOKEN;
@@ -245,8 +245,8 @@ client.on('message', async (message: Message) => {
   if (message.author.bot) {
     return null;
   }
-  if(message.guild != null){
-    store.addMessage(message.guild.id, message.author.id)
+  if (message.guild != null) {
+    store.addMessage(message.guild.id, message.author.id);
   }
 
   const command: any = isBotCommand(message.content);
@@ -453,29 +453,33 @@ client.on('message', async (message: Message) => {
               message
             ).evokeSphinxException();
           });
-      } else if(sphinxCommand[0] == "score"){
-        if(message.guild != null){
-          if(message.mentions.users.size == 0 && !message.mentions.everyone){
+      } else if (sphinxCommand[0] == 'score') {
+        if (message.guild != null) {
+          if (message.mentions.users.size == 0 && !message.mentions.everyone) {
             message.reply(
               `Your score is ${userScore(message.guild, message.author, store)}`
-            )
+            );
           } else {
-            if(!message.mentions.everyone){
-              const data = message.mentions.users.forEach((data:User) => {
-                const member = message.guild?.members.cache.filter((member:GuildMember) => {
-                  return member.id == data.id
-                }).first()
-                if(!member?.user.bot){
+            if (!message.mentions.everyone) {
+              const data = message.mentions.users.forEach((data: User) => {
+                const member = message.guild?.members.cache
+                  .filter((member: GuildMember) => {
+                    return member.id == data.id;
+                  })
+                  .first();
+                if (!member?.user.bot) {
                   message.channel.send(
                     `${getUserDisplayName(member)}'s score is ${userScore(
-                      message.guild, message.author, store
-                    )}`  
-                  )
-                  console.log("scores")
-                } 
-              })
+                      message.guild,
+                      message.author,
+                      store
+                    )}`
+                  );
+                  console.log('scores');
+                }
+              });
             } else {
-              message.reply("You can't mention everyone :slight_frown:")
+              message.reply("You can't mention everyone :slight_frown:");
             }
           }
         }
@@ -592,7 +596,7 @@ client.on('message', async (message: Message) => {
 
 client.on('guildCreate', (guild: Guild) => {
   const channel = guild.systemChannel;
-  store.joinServer(guild.id)
+  store.joinServer(guild.id);
   channel?.send(
     createDiscordEmbed({
       title: `Thank you for inviting me`,
