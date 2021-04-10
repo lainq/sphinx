@@ -27,7 +27,7 @@ export const userScore = (server:Guild | null, member:User, store:SphinxDataStor
     for(let idx=0; idx<data.length; idx++){
         const currentUser = data[idx]
         if(currentUser.id == member.id){
-            return parseInt(Math.floor(currentUser.messages / 5).toString())
+            return parseInt(Math.floor(currentUser.messages / 10).toString())
         }
     }
     return 0;
