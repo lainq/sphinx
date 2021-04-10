@@ -172,6 +172,15 @@ export class SphinxDataStore {
     this.writeFileData(this.path, Object.fromEntries(this.data), true);
   };
 
+  /**
+   * @public
+   * 
+   * Get the information about the server from the json
+   * storage using the server id and return the data 
+   * 
+   * @param {string} serverId The id of the server
+   * @returns {any}
+   */
   public get(serverId:string){
     const data = this.data.get(serverId);
     if(data == undefined){
