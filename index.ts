@@ -30,10 +30,19 @@ import {SphinxPollCommand, sphinxSimplePoll} from './src/commands/poll';
 import {SphinxRoleAssignment} from './src/commands/roles';
 import {botMentioned} from './src/constants';
 import {createBotReply} from './src/reply';
+import { SphinxDataStore } from './src/store/store';
+import { join } from 'path';
+import { cwd } from 'process';
 
 // Take all the variables from the env
 // file to process.env
 config();
+
+export const store = new SphinxDataStore({
+  databaseName : "sphinx",
+  databasePath : join(cwd(), "src", "store", "json", "sphinx.json"),
+  exists : false
+})
 
 // constants
 const token = process.env.TOKEN;
@@ -234,6 +243,9 @@ client.on('ready', () => {
 client.on('message', async (message: Message) => {
   if (message.author.bot) {
     return null;
+  }
+  if(message.guild != null){
+    store.addMessage(message.guild.id, message.author.id)
   }
 
   const command: any = isBotCommand(message.content);
@@ -553,6 +565,7 @@ client.on('message', async (message: Message) => {
 
 client.on('guildCreate', (guild: Guild) => {
   const channel = guild.systemChannel;
+  store.joinServer(guild.id)
   channel?.send(
     createDiscordEmbed({
       title: `Thank you for inviting me`,
