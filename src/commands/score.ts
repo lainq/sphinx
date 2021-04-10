@@ -10,13 +10,16 @@ import { SphinxDataStore } from "../store/store"
  * if the id of the currentUser matches with the message
  * author throw the users score
  * 
- * @param {Guild} server The message guild
+ * @param {Guild | null} server The message guild
  * @param {User} member The author of the message
  * @param {SphinxDataStore} store The json data store 
  * @returns {number} The number of messages by the user divided
  * by 5
  */
-export const userScore = (server:Guild, member:User, store:SphinxDataStore):number => {
+export const userScore = (server:Guild | null, member:User, store:SphinxDataStore):number => {
+    if(server == null){
+        return -1;
+    }
     const data = store.get(server.id)
     if(data == undefined){
         return 0;

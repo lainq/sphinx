@@ -455,9 +455,25 @@ client.on('message', async (message: Message) => {
           });
       } else if(sphinxCommand[0] == "score"){
         if(message.guild != null){
-          message.reply(
-            `Your score is ${userScore(message.guild, message.author, store)}`
-          )
+          if(message.mentions.users.size == 0){
+            message.reply(
+              `Your score is ${userScore(message.guild, message.author, store)}`
+            )
+          } else {
+            const data = message.mentions.users.forEach((data:User) => {
+              const member = message.guild?.members.cache.filter((member:GuildMember) => {
+                return member.id == data.id
+              }).first()
+              if(!member?.user.bot){
+                message.channel.send(
+                  `${getUserDisplayName(member)}'s score is ${userScore(
+                    message.guild, message.author, store
+                  )}`  
+                )
+                console.log("scores")
+              } 
+            })
+          }
         }
       }
     } else if (command.type == 'github') {
