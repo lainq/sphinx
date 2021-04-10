@@ -171,4 +171,21 @@ export class SphinxDataStore {
     data.push({id: memberId, messages: 1});
     this.writeFileData(this.path, Object.fromEntries(this.data), true);
   };
+
+  public get(serverId:string, memberId:string | null){
+    const data = this.data.get(serverId);
+    if(memberId == null){
+      if(data == undefined){
+        this.joinServer(serverId)
+      }
+      return data;
+    }
+
+    for(let idx=0; idx<data.length; idx++){
+      const user = data[idx]
+      if(user.id == memberId){
+        return memberId
+      }
+    }
+  }
 }
