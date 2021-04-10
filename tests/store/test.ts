@@ -8,4 +8,7 @@ const data = new SphinxDataStore({
   exists: false,
 });
 
-data.addMessage('100', '383884848');
+
+// data.joinServer("34242")
+console.log(data.get("34242"))
+// console.log(data.data)
