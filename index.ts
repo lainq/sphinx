@@ -34,6 +34,7 @@ import {join} from 'path';
 import {cwd} from 'process';
 import {userScore} from './src/commands/score';
 import { SphinxUrlShortener } from './src/commands/url/shorten';
+import { expandUrl } from './src/commands/url/expand';
 
 // Take all the variables from the env
 // file to process.env
@@ -483,6 +484,8 @@ client.on('message', async (message: Message) => {
         } 
       } else if(sphinxCommand[0] == "shorten") {
           const shortener = new SphinxUrlShortener(message)
+      } else if(sphinxCommand[0] == "expand"){
+        expandUrl(message.content.split(" ").slice(1)[0], message)
       }
     } else if (command.type == 'github') {
       const username = message.content.split(' ')[1];
