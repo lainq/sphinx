@@ -41,6 +41,13 @@ export const createDiscordEmbed = (
   return embed;
 };
 
+/**
+ * 
+ * Generate random color codes
+ * for discord embeds :slight_smile:
+ * 
+ * @returns {string} The color code
+ */
 export const randomColor = ():string => {
   const color:any = Math.floor(Math.random()*16777215).toString(16)
   return `#${color}`
