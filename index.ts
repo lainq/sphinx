@@ -13,7 +13,6 @@ import {
 import {Fcal, FcalError} from 'fcal';
 import {SphinxException} from './src/error';
 import {findChannelId} from './src/channel';
-import {SphinxCodeRunner} from './src/run/run';
 import {SphinxKickCommand} from './src/commands/kick';
 import {createDiscordEmbed} from './src/embed';
 import {SphinxGithubCommand, sphinxRepositoryCommand} from './src/github';
@@ -294,8 +293,6 @@ client.on('message', async (message: Message) => {
           sphinxMessage(message);
         }
       }
-    } else if (command.type == ';run') {
-      const executor = new SphinxCodeRunner(message);
     } else if (command.type == '!') {
       const sphinxCommand = message.content
         .slice(1, message.content.length)
