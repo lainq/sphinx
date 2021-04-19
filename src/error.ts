@@ -34,3 +34,4 @@ export class SphinxException {
     this.messageChannel.channel.send(embed);
   };
 }
+

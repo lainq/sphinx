@@ -33,6 +33,7 @@ import {SphinxDataStore} from './src/store/store';
 import {join} from 'path';
 import {cwd} from 'process';
 import {userScore} from './src/commands/score';
+import { SphinxUrlShortener } from './src/commands/url/shorten';
 
 // Take all the variables from the env
 // file to process.env
@@ -479,7 +480,9 @@ client.on('message', async (message: Message) => {
               message.reply("You can't mention everyone :slight_frown:");
             }
           }
-        }
+        } 
+      } else if(sphinxCommand[0] == "shorten") {
+          const shortener = new SphinxUrlShortener(message)
       }
     } else if (command.type == 'github') {
       const username = message.content.split(' ')[1];
