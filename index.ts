@@ -14,7 +14,7 @@ import {Fcal, FcalError} from 'fcal';
 import {SphinxException} from './src/error';
 import {findChannelId} from './src/channel';
 import {SphinxKickCommand} from './src/commands/kick';
-import {createDiscordEmbed} from './src/embed';
+import {createDiscordEmbed, randomColor} from './src/embed';
 import {SphinxGithubCommand, sphinxRepositoryCommand} from './src/github';
 import {
   getUserAvatar,
@@ -240,6 +240,8 @@ const sphinxMessage = (message: Message) => {
 
 client.on('ready', () => {
   console.log('The bot has started');
+  client.user?.setStatus("idle")
+  client.user?.setActivity("Watching a bunch of people", { type: "WATCHING"})
 });
 
 client.on('message', async (message: Message) => {
@@ -607,13 +609,13 @@ client.on('guildCreate', (guild: Guild) => {
         name: 'Code Roller',
         image: image,
       },
-      color: '#7289DA',
+      color: randomColor(),
       description: `I am the Sphinx bot and thank you for inviting me`,
       thumbnail: image,
       url: '',
     })
   );
-  client.user?.setActivity(`Serving ${client.guilds.cache.size} servers`);
+  // client.user?.setActivity(`Serving ${client.guilds.cache.size} servers`);
 });
 
 client.on('guildMemberAdd', (member: GuildMember) => {
